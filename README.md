@@ -25,8 +25,10 @@ base para un modelo "Usuario" que deba implementar el acceso a la aplicación.
 
 ESTRUCTURA DE DIRECTORIOS
 -------------------------
+```txt
 +--/
 |  +--/codigo     contiene el código tu proyecto que empieza con la plantilla adaptada de la aplicación básica de Yii2.
 |  +--/librerias  contiene las librerías del framework y otras extensiones necesarias para su funcionamiento.
 |  +--/proyecto   contiene la descripción de tu proyecto de trabajo. Cópialo aquí si no lo tienes aún.
 |  +--/sql        contiene los scripts de la base de datos que se vayan necesitando y ampliando.
+```
