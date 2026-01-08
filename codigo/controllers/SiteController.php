@@ -147,15 +147,15 @@ class SiteController extends Controller
     }
 
     // ------------------------------------------------------------------------
-    // NUEVAS FUNCIONES AÑADIDAS (Signup y Logs)
+    // NUEVAS FUNCIONES AÑADIDAS (Register y Logs)
     // ------------------------------------------------------------------------
 
     /**
-     * Acción para registrar un nuevo usuario (Signup).
+     * Acción para registrar un nuevo usuario (Register).
      *
      * @return mixed
      */
-    public function actionSignup()
+    public function actionRegister()
     {
         $model = new RegistroUsuarios();
 
@@ -170,7 +170,7 @@ class SiteController extends Controller
         }
 
         // Si no se enviaron datos o hubo error, mostramos la vista de registro
-        return $this->render('signup', [
+        return $this->render('register', [
             'model' => $model,
         ]);
     }
