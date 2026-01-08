@@ -14,7 +14,7 @@ class RegistroUsuarios extends Model
     public $email;
     public $password;
     public $nombre;
-    public $apellidos;
+    public $rol;
 
     /**
      * Reglas de validación.
@@ -23,7 +23,7 @@ class RegistroUsuarios extends Model
     {
         return [
             // Todos estos campos son obligatorios
-            [['username', 'email', 'password', 'nombre', 'apellidos'], 'required', 'message' => 'Este campo es obligatorio.'],
+            [['username', 'email', 'password', 'nombre', 'rol'], 'required', 'message' => 'Este campo es obligatorio.'],
             
             // Validaciones para el nombre de usuario
             ['username', 'trim'], // Elimina espacios en blanco al inicio y final
@@ -40,7 +40,7 @@ class RegistroUsuarios extends Model
             ['password', 'string', 'min' => 4, 'message' => 'La contraseña debe tener al menos 4 caracteres.'],
             
             // Validaciones de longitud para nombre y apellidos
-            [['nombre', 'apellidos'], 'string', 'max' => 255],
+            [['nombre', 'rol'], 'string', 'max' => 255],
         ];
     }
 
@@ -60,14 +60,14 @@ class RegistroUsuarios extends Model
         $user->username = $this->username;
         $user->email = $this->email;
         $user->nombre = $this->nombre;
-        $user->apellidos = $this->apellidos;
+        $user->rol = $this->rol;
         
         // Guardamos la contraseña en texto plano (según tu configuración actual)
         // NOTA: Si en el futuro decides encriptar, usa: Yii::$app->security->generatePasswordHash($this->password);
         $user->password = $this->password; 
         
         // Asignamos un rol por defecto si tu base de datos lo requiere
-        $user->rol = 'usuario'; 
+//        $user->rol = 'usuario'; 
 
         // Guardamos el modelo Usuario en la base de datos
         return $user->save();

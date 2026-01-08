@@ -19,11 +19,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'nombre')->label('Nombre') ?>
 
-                <?= $form->field($model, 'apellidos')->label('Apellidos') ?>
-
                 <?= $form->field($model, 'email')->label('Correo Electrónico') ?>
 
                 <?= $form->field($model, 'password')->passwordInput()->label('Contraseña') ?>
+
+                <?php 
+                        echo $form->field($model, 'rol')->dropDownList([
+                            'estudiante' => 'Estudiante',
+                            'gestor' => 'Gestor',
+                            'empresa' => 'Empresa',
+                        ], ['prompt' => 'Seleccione un rol...']);
+                ?>
+
 
                 <div class="form-group">
                     <?= Html::submitButton('Registrarse', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
