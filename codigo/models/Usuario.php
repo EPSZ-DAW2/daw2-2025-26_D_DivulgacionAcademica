@@ -20,7 +20,7 @@ class Usuario extends \yii\db\ActiveRecord
   public static function tableName()
   {
     //*** Sustituir "TABLA_USUARIOS" por el nombre correspondiente.
-    return '{{%TABLA_USUARIOS}}';
+    return '{{%usuario}}';
   }
   
   //PENDIENTE: Método "rules".
@@ -60,7 +60,8 @@ class Usuario extends \yii\db\ActiveRecord
     //el cual puede ser una variante de su clave primaria o similar para
     //asegurar que sea único en la tabla correspondiente.
     //*** Sustituir "CAMPO_TOKEN" por el nombre correspondiente.
-    if (!empty( $token)) $model= static::findOne( ['CAMPO_TOKEN'=>$token]);
+    // Nota: Como no usas tokens en tu DB actual, esto se deja nulo o comentado para evitar errores.
+    // if (!empty( $token)) $model= static::findOne( ['token'=>$token]);
     
     return $model;
   }
@@ -71,7 +72,7 @@ class Usuario extends \yii\db\ActiveRecord
   public function getId()
   {
     //*** Sustituir "CAMPO_CLAVE_PRIMARIA" por el nombre correspondiente.
-    return $this->CAMPO_CLAVE_PRIMARIA;
+    return $this->id;
   }
   
   /**
@@ -82,7 +83,8 @@ class Usuario extends \yii\db\ActiveRecord
     //*** Sustituir "CAMPO_CLAVE_AUTORIZACION" por el nombre correspondiente
     //o generar un resultado en función del campo "CAMPO_CLAVE_PRIMARIA" si
     //no se implementa un servicio web que necesite mayor seguridad.
-    return $this->CAMPO_CLAVE_AUTORIZACION;
+    // Nota: Retornamos null porque tu tabla no tiene auth_key
+    return null; 
   }
   
   /**
@@ -117,8 +119,8 @@ class Usuario extends \yii\db\ActiveRecord
     //si se utiliza un posible sistema de usuario activo o inactivo.
     //*** Descomentar y sustituir "CAMPO_BLOQUEADO" por el nombre correspondiente
     //si se utiliza un posible sistema de usuario bloqueado o no bloqueado.
-    if (!empty( $id)) $model= static::findOne([
-        'CAMPO_LOGIN'=>$username
+    if (!empty( $username)) $model= static::findOne([
+        'username'=>$username
       //, 'CAMPO_ACTIVO'=>true
       //, 'CAMPO_BLOQUEADO'=>false
     ]);
@@ -143,7 +145,7 @@ class Usuario extends \yii\db\ActiveRecord
     //función HASH se debe aplicar la función HASH a "$password" antes 
     //de comparar, o si se usa el sistema "Security" de Yii2, se debe hacer
     //la comparación usando sus funcionalidades.
-    return ($this->CAMPO_PASSWORD === $password);
+    return ($this->password === $password);
     /*---*-/
     $hashPassword= ALGUNA_FUNCION_HASH( $password);
     return ($this->CAMPO_PASSWORD === $hashPassword);
