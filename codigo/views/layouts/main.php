@@ -72,7 +72,7 @@ AppAsset::register($this);
           <h3 class="footer__section-title">Recursos</h3>
           <ul class="footer__list">
             <li class="footer__list-item"><a href="<?= Url::to(['/materiales/index']) ?>" class="footer__link">Explorar materiales</a></li>
-            <li class="footer__list-item"><a href="<?= Url::to(['/colecciones/index']) ?>" class="footer__link">Colecciones</a></li>
+            <li class="footer__list-item"><a href="<?= Url::to(['/coleccion/index']) ?>" class="footer__link">Colecciones</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/dudas/index']) ?>" class="footer__link">Preguntas y respuestas</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/materiales/create']) ?>" class="footer__link">Subir material</a></li>
           </ul>
