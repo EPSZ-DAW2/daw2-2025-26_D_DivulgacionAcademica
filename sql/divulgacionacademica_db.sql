@@ -480,6 +480,27 @@ ALTER TABLE `servicio`
   ADD CONSTRAINT `servicio_ibfk_1` FOREIGN KEY (`institucionId`) REFERENCES `institucion` (`id`) ON DELETE CASCADE;
 COMMIT;
 
+
+CREATE TABLE `coleccion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(150) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `usuarioId` int(11) NOT NULL,
+  `descargas` int(11) DEFAULT 0,
+  `fecha_actualizacion` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_coleccion_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+INSERT INTO `coleccion` (`titulo`, `descripcion`, `usuarioId`, `descargas`, `fecha_actualizacion`) VALUES
+('Matemáticas para Ingeniería', 'Colección completa de materiales de matemáticas orientados a ingenierías: cálculo, álgebra lineal y métodos numéricos.', 9, 2350, '2026-01-05 10:00:00'),
+('Programación Web Full Stack', 'Todo lo necesario para aprender desarrollo web: HTML, CSS, JavaScript, frameworks modernos y bases de datos.', 8, 1890, '2026-01-01 12:30:00'),
+('Física Cuántica Fundamentals', 'Apuntes, ejercicios y exámenes de física cuántica. Desde los postulados básicos hasta sistemas complejos.', 10, 1540, '2025-12-20 09:15:00'),
+('Seguridad Informática Avanzada', 'Recursos sobre hacking ético, auditoría de redes y criptografía para profesionales.', 2, 3100, '2026-01-07 14:00:00'),
+('Alemán Técnico B2', 'Materiales específicos para aprobar el nivel B2 de alemán con enfoque en ingeniería y ciencias.', 11, 850, '2026-01-04 18:20:00'),
+('Bases de Datos con SQL', 'Laboratorios prácticos y teoría sobre diseño de bases de datos relacionales y optimización de consultas.', 12, 1200, '2026-01-02 11:45:00');
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
