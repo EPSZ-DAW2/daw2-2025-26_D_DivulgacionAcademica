@@ -29,6 +29,7 @@
 │   │   ├── ContactForm.php
 │   │   ├── LoginForm.php
 │   │   ├── Usuario.php                          Control de los usuarios que acceden a la página web.
+│   │   ├── RegistroUsuarios.php                 Pagina de que controla el registro de los usuario en la página web e introduce los valores agregados en la base de datos.
 │   │   └── xxx_User.php
 │   ├── README.md
 │   ├── requirements.php
