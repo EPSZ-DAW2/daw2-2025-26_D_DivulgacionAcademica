@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2026 at 01:57 PM
+-- Generation Time: Jan 08, 2026 at 02:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,6 +42,33 @@ INSERT INTO `clienteempresa` (`id`, `razon_social`, `cif`, `usuarioId`) VALUES
 (1, 'Tech Solutions S.L.', 'B99999991', 5),
 (2, 'Consultora Global S.A.', 'A88888882', 6),
 (3, 'Innova StartUp', 'B77777773', 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coleccion`
+--
+
+CREATE TABLE `coleccion` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(150) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `usuarioId` int(11) NOT NULL,
+  `descargas` int(11) DEFAULT 0,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coleccion`
+--
+
+INSERT INTO `coleccion` (`id`, `titulo`, `descripcion`, `usuarioId`, `descargas`, `fecha_actualizacion`) VALUES
+(1, 'Matemáticas para Ingeniería', 'Colección completa de materiales de matemáticas orientados a ingenierías: cálculo, álgebra lineal y métodos numéricos.', 9, 2350, '2026-01-05 10:00:00'),
+(2, 'Programación Web Full Stack', 'Todo lo necesario para aprender desarrollo web: HTML, CSS, JavaScript, frameworks modernos y bases de datos.', 8, 1890, '2026-01-01 12:30:00'),
+(3, 'Física Cuántica Fundamentals', 'Apuntes, ejercicios y exámenes de física cuántica. Desde los postulados básicos hasta sistemas complejos.', 10, 1540, '2025-12-20 09:15:00'),
+(4, 'Seguridad Informática Avanzada', 'Recursos sobre hacking ético, auditoría de redes y criptografía para profesionales.', 2, 3100, '2026-01-07 14:00:00'),
+(5, 'Alemán Técnico B2', 'Materiales específicos para aprobar el nivel B2 de alemán con enfoque en ingeniería y ciencias.', 11, 850, '2026-01-04 18:20:00'),
+(6, 'Bases de Datos con SQL', 'Laboratorios prácticos y teoría sobre diseño de bases de datos relacionales y optimización de consultas.', 12, 1200, '2026-01-02 11:45:00');
 
 -- --------------------------------------------------------
 
@@ -324,6 +351,13 @@ ALTER TABLE `clienteempresa`
   ADD KEY `usuarioId` (`usuarioId`);
 
 --
+-- Indexes for table `coleccion`
+--
+ALTER TABLE `coleccion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_coleccion_usuario` (`usuarioId`);
+
+--
 -- Indexes for table `contratacion`
 --
 ALTER TABLE `contratacion`
@@ -405,6 +439,12 @@ ALTER TABLE `clienteempresa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `coleccion`
+--
+ALTER TABLE `coleccion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `contratacion`
 --
 ALTER TABLE `contratacion`
@@ -473,6 +513,12 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `clienteempresa`
   ADD CONSTRAINT `clienteempresa_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `coleccion`
+--
+ALTER TABLE `coleccion`
+  ADD CONSTRAINT `fk_coleccion_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `contratacion`

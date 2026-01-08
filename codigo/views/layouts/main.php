@@ -35,7 +35,7 @@ AppAsset::register($this);
           
           <li><a href="<?= Url::to(['/materiales/index']) ?>" class="nav__link <?= (Yii::$app->controller->id == 'materiales') ? 'nav__link--active' : '' ?>">Materiales</a></li>
           
-          <li><a href="<?= Url::to(['/colecciones/index']) ?>" class="nav__link">Colecciones</a></li>
+          <li><a href="<?= Url::to(['/coleccion/index']) ?>" class="nav__link">Colecciones</a></li>
           
           <li><a href="<?= Url::to(['/dudas/index']) ?>" class="nav__link">Q&amp;A</a></li>
           
