@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2026 at 10:18 AM
+-- Generation Time: Jan 08, 2026 at 01:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -250,6 +250,31 @@ INSERT INTO `servicio` (`id`, `nombre`, `precio`, `institucionId`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `user_log`
+--
+
+CREATE TABLE `user_log` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_identifier` varchar(255) DEFAULT NULL,
+  `action` varchar(255) NOT NULL,
+  `ip_address` varchar(50) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_log`
+--
+
+INSERT INTO `user_log` (`id`, `user_id`, `user_identifier`, `action`, `ip_address`, `user_agent`, `created_at`) VALUES
+(1, 18, 'juanrv2@mail.com', 'Logout', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2026-01-08 13:54:12'),
+(2, 16, 'juan@mail.com', 'Login Success', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2026-01-08 13:54:24'),
+(3, 16, 'juan@mail.com', 'Logout', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2026-01-08 13:54:30');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `usuario`
 --
 
@@ -268,21 +293,24 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `nombre`, `email`, `password`, `rol`, `fecha_registro`, `username`) VALUES
-(1, 'Super Admin', 'admin@portal.com', '1234', 'admin', '2026-01-03 11:21:26', NULL),
-(2, 'Gestor Politécnica', 'gestor@upm.es', '1234', 'gestor', '2026-01-03 11:21:26', NULL),
-(3, 'Gestor CodeMasters', 'director@codemasters.com', '1234', 'gestor', '2026-01-03 11:21:26', NULL),
-(4, 'Gestor EnglishNow', 'hello@englishnow.com', '1234', 'gestor', '2026-01-03 11:21:26', NULL),
-(5, 'Tech Solutions CEO', 'contacto@techsolutions.com', '1234', 'empresa', '2026-01-03 11:21:26', NULL),
-(6, 'Consultora Global', 'rrhh@consultoraglobal.com', '1234', 'empresa', '2026-01-03 11:21:26', NULL),
-(7, 'StartUp Innova', 'admin@innova.io', '1234', 'empresa', '2026-01-03 11:21:26', NULL),
-(8, 'Carlos Pérez', 'carlos@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(9, 'María García', 'maria@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(10, 'Lucía Méndez', 'lucia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(11, 'David Torres', 'david@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(12, 'Elena Nito', 'elena@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(13, 'Sofía Rivas', 'sofia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(14, 'Jorge Bua', 'jorge@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
-(15, 'Ana Bot', 'ana@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL);
+(1, 'Super Admin', 'admin@portal.com', '1234', 'admin', '2026-01-03 11:21:26', 'admin@portal.com'),
+(2, 'Gestor Politécnica', 'gestor@upm.es', '1234', 'gestor', '2026-01-03 11:21:26', 'gestor@upm.es'),
+(3, 'Gestor CodeMasters', 'director@codemasters.com', '1234', 'gestor', '2026-01-03 11:21:26', 'director@codemasters.com'),
+(4, 'Gestor EnglishNow', 'hello@englishnow.com', '1234', 'gestor', '2026-01-03 11:21:26', 'hello@englishnow.com'),
+(5, 'Tech Solutions CEO', 'contacto@techsolutions.com', '1234', 'empresa', '2026-01-03 11:21:26', 'contacto@techsolutions.com'),
+(6, 'Consultora Global', 'rrhh@consultoraglobal.com', '1234', 'empresa', '2026-01-03 11:21:26', 'rrhh@consultoraglobal.com'),
+(7, 'StartUp Innova', 'admin@innova.io', '1234', 'empresa', '2026-01-03 11:21:26', 'admin@innova.io'),
+(8, 'Carlos Pérez', 'carlos@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'carlos@mail.com'),
+(9, 'María García', 'maria@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'maria@mail.com'),
+(10, 'Lucía Méndez', 'lucia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'lucia@mail.com'),
+(11, 'David Torres', 'david@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'david@mail.com'),
+(12, 'Elena Nito', 'elena@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'elena@mail.com'),
+(13, 'Sofía Rivas', 'sofia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'sofia@mail.com'),
+(14, 'Jorge Bua', 'jorge@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'jorge@mail.com'),
+(15, 'Ana Bot', 'ana@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', 'ana@mail.com'),
+(16, 'Juan Riego Vila', 'juan@mail.com', '1234', 'alumno', '2026-01-08 10:33:50', 'juanrv'),
+(17, 'Andrea Colorado Esteban', 'andreace@mail.com', '1234', '', '2026-01-08 13:01:31', 'andreace'),
+(18, 'Juan Riego Vila', 'juanrv2@mail.com', '1234', '', '2026-01-08 13:40:35', 'juanrv2');
 
 --
 -- Indexes for dumped tables
@@ -354,6 +382,12 @@ ALTER TABLE `servicio`
   ADD KEY `institucionId` (`institucionId`);
 
 --
+-- Indexes for table `user_log`
+--
+ALTER TABLE `user_log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `usuario`
 --
 ALTER TABLE `usuario`
@@ -419,10 +453,16 @@ ALTER TABLE `servicio`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `user_log`
+--
+ALTER TABLE `user_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Constraints for dumped tables
