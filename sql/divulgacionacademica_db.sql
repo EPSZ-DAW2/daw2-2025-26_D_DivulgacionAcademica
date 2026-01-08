@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 03-01-2026 a las 13:37:07
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Jan 08, 2026 at 10:18 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `gestion_academica`
+-- Database: `divulgacionacademica_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clienteempresa`
+-- Table structure for table `clienteempresa`
 --
 
 CREATE TABLE `clienteempresa` (
@@ -35,7 +35,7 @@ CREATE TABLE `clienteempresa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `clienteempresa`
+-- Dumping data for table `clienteempresa`
 --
 
 INSERT INTO `clienteempresa` (`id`, `razon_social`, `cif`, `usuarioId`) VALUES
@@ -46,7 +46,7 @@ INSERT INTO `clienteempresa` (`id`, `razon_social`, `cif`, `usuarioId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `contratacion`
+-- Table structure for table `contratacion`
 --
 
 CREATE TABLE `contratacion` (
@@ -57,7 +57,7 @@ CREATE TABLE `contratacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `contratacion`
+-- Dumping data for table `contratacion`
 --
 
 INSERT INTO `contratacion` (`id`, `clienteId`, `servicioId`, `fecha`) VALUES
@@ -69,7 +69,7 @@ INSERT INTO `contratacion` (`id`, `clienteId`, `servicioId`, `fecha`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `documento`
+-- Table structure for table `documento`
 --
 
 CREATE TABLE `documento` (
@@ -83,7 +83,7 @@ CREATE TABLE `documento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `documento`
+-- Dumping data for table `documento`
 --
 
 INSERT INTO `documento` (`id`, `titulo`, `archivo_url`, `tipo_acceso`, `materiaId`, `autorId`, `institucionId`) VALUES
@@ -100,7 +100,7 @@ INSERT INTO `documento` (`id`, `titulo`, `archivo_url`, `tipo_acceso`, `materiaI
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `evento`
+-- Table structure for table `evento`
 --
 
 CREATE TABLE `evento` (
@@ -111,7 +111,7 @@ CREATE TABLE `evento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `evento`
+-- Dumping data for table `evento`
 --
 
 INSERT INTO `evento` (`id`, `titulo`, `fecha_inicio`, `institucionId`) VALUES
@@ -124,7 +124,7 @@ INSERT INTO `evento` (`id`, `titulo`, `fecha_inicio`, `institucionId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `incidencia`
+-- Table structure for table `incidencia`
 --
 
 CREATE TABLE `incidencia` (
@@ -135,7 +135,7 @@ CREATE TABLE `incidencia` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `incidencia`
+-- Dumping data for table `incidencia`
 --
 
 INSERT INTO `incidencia` (`id`, `descripcion`, `estado`, `usuarioId`) VALUES
@@ -148,7 +148,7 @@ INSERT INTO `incidencia` (`id`, `descripcion`, `estado`, `usuarioId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `institucion`
+-- Table structure for table `institucion`
 --
 
 CREATE TABLE `institucion` (
@@ -160,7 +160,7 @@ CREATE TABLE `institucion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `institucion`
+-- Dumping data for table `institucion`
 --
 
 INSERT INTO `institucion` (`id`, `nombre`, `tipo`, `ubicacion`, `contacto`) VALUES
@@ -171,7 +171,7 @@ INSERT INTO `institucion` (`id`, `nombre`, `tipo`, `ubicacion`, `contacto`) VALU
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `materia`
+-- Table structure for table `materia`
 --
 
 CREATE TABLE `materia` (
@@ -181,7 +181,7 @@ CREATE TABLE `materia` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `materia`
+-- Dumping data for table `materia`
 --
 
 INSERT INTO `materia` (`id`, `nombre`, `parentId`) VALUES
@@ -201,7 +201,7 @@ INSERT INTO `materia` (`id`, `nombre`, `parentId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `personal`
+-- Table structure for table `personal`
 --
 
 CREATE TABLE `personal` (
@@ -212,7 +212,7 @@ CREATE TABLE `personal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `personal`
+-- Dumping data for table `personal`
 --
 
 INSERT INTO `personal` (`id`, `nombre`, `apellidos`, `institucionId`) VALUES
@@ -226,7 +226,7 @@ INSERT INTO `personal` (`id`, `nombre`, `apellidos`, `institucionId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `servicio`
+-- Table structure for table `servicio`
 --
 
 CREATE TABLE `servicio` (
@@ -237,7 +237,7 @@ CREATE TABLE `servicio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `servicio`
+-- Dumping data for table `servicio`
 --
 
 INSERT INTO `servicio` (`id`, `nombre`, `precio`, `institucionId`) VALUES
@@ -250,7 +250,7 @@ INSERT INTO `servicio` (`id`, `nombre`, `precio`, `institucionId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Table structure for table `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -259,43 +259,44 @@ CREATE TABLE `usuario` (
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `rol` enum('admin','gestor','empresa','alumno') DEFAULT 'alumno',
-  `fecha_registro` datetime DEFAULT current_timestamp()
+  `fecha_registro` datetime DEFAULT current_timestamp(),
+  `username` char(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuario`
+-- Dumping data for table `usuario`
 --
 
-INSERT INTO `usuario` (`id`, `nombre`, `email`, `password`, `rol`, `fecha_registro`) VALUES
-(1, 'Super Admin', 'admin@portal.com', '1234', 'admin', '2026-01-03 11:21:26'),
-(2, 'Gestor Politécnica', 'gestor@upm.es', '1234', 'gestor', '2026-01-03 11:21:26'),
-(3, 'Gestor CodeMasters', 'director@codemasters.com', '1234', 'gestor', '2026-01-03 11:21:26'),
-(4, 'Gestor EnglishNow', 'hello@englishnow.com', '1234', 'gestor', '2026-01-03 11:21:26'),
-(5, 'Tech Solutions CEO', 'contacto@techsolutions.com', '1234', 'empresa', '2026-01-03 11:21:26'),
-(6, 'Consultora Global', 'rrhh@consultoraglobal.com', '1234', 'empresa', '2026-01-03 11:21:26'),
-(7, 'StartUp Innova', 'admin@innova.io', '1234', 'empresa', '2026-01-03 11:21:26'),
-(8, 'Carlos Pérez', 'carlos@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(9, 'María García', 'maria@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(10, 'Lucía Méndez', 'lucia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(11, 'David Torres', 'david@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(12, 'Elena Nito', 'elena@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(13, 'Sofía Rivas', 'sofia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(14, 'Jorge Bua', 'jorge@mail.com', '1234', 'alumno', '2026-01-03 11:21:26'),
-(15, 'Ana Bot', 'ana@mail.com', '1234', 'alumno', '2026-01-03 11:21:26');
+INSERT INTO `usuario` (`id`, `nombre`, `email`, `password`, `rol`, `fecha_registro`, `username`) VALUES
+(1, 'Super Admin', 'admin@portal.com', '1234', 'admin', '2026-01-03 11:21:26', NULL),
+(2, 'Gestor Politécnica', 'gestor@upm.es', '1234', 'gestor', '2026-01-03 11:21:26', NULL),
+(3, 'Gestor CodeMasters', 'director@codemasters.com', '1234', 'gestor', '2026-01-03 11:21:26', NULL),
+(4, 'Gestor EnglishNow', 'hello@englishnow.com', '1234', 'gestor', '2026-01-03 11:21:26', NULL),
+(5, 'Tech Solutions CEO', 'contacto@techsolutions.com', '1234', 'empresa', '2026-01-03 11:21:26', NULL),
+(6, 'Consultora Global', 'rrhh@consultoraglobal.com', '1234', 'empresa', '2026-01-03 11:21:26', NULL),
+(7, 'StartUp Innova', 'admin@innova.io', '1234', 'empresa', '2026-01-03 11:21:26', NULL),
+(8, 'Carlos Pérez', 'carlos@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(9, 'María García', 'maria@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(10, 'Lucía Méndez', 'lucia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(11, 'David Torres', 'david@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(12, 'Elena Nito', 'elena@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(13, 'Sofía Rivas', 'sofia@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(14, 'Jorge Bua', 'jorge@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL),
+(15, 'Ana Bot', 'ana@mail.com', '1234', 'alumno', '2026-01-03 11:21:26', NULL);
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `clienteempresa`
+-- Indexes for table `clienteempresa`
 --
 ALTER TABLE `clienteempresa`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuarioId` (`usuarioId`);
 
 --
--- Indices de la tabla `contratacion`
+-- Indexes for table `contratacion`
 --
 ALTER TABLE `contratacion`
   ADD PRIMARY KEY (`id`),
@@ -303,7 +304,7 @@ ALTER TABLE `contratacion`
   ADD KEY `servicioId` (`servicioId`);
 
 --
--- Indices de la tabla `documento`
+-- Indexes for table `documento`
 --
 ALTER TABLE `documento`
   ADD PRIMARY KEY (`id`),
@@ -312,136 +313,136 @@ ALTER TABLE `documento`
   ADD KEY `institucionId` (`institucionId`);
 
 --
--- Indices de la tabla `evento`
+-- Indexes for table `evento`
 --
 ALTER TABLE `evento`
   ADD PRIMARY KEY (`id`),
   ADD KEY `institucionId` (`institucionId`);
 
 --
--- Indices de la tabla `incidencia`
+-- Indexes for table `incidencia`
 --
 ALTER TABLE `incidencia`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuarioId` (`usuarioId`);
 
 --
--- Indices de la tabla `institucion`
+-- Indexes for table `institucion`
 --
 ALTER TABLE `institucion`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `materia`
+-- Indexes for table `materia`
 --
 ALTER TABLE `materia`
   ADD PRIMARY KEY (`id`),
   ADD KEY `parentId` (`parentId`);
 
 --
--- Indices de la tabla `personal`
+-- Indexes for table `personal`
 --
 ALTER TABLE `personal`
   ADD PRIMARY KEY (`id`),
   ADD KEY `institucionId` (`institucionId`);
 
 --
--- Indices de la tabla `servicio`
+-- Indexes for table `servicio`
 --
 ALTER TABLE `servicio`
   ADD PRIMARY KEY (`id`),
   ADD KEY `institucionId` (`institucionId`);
 
 --
--- Indices de la tabla `usuario`
+-- Indexes for table `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `clienteempresa`
+-- AUTO_INCREMENT for table `clienteempresa`
 --
 ALTER TABLE `clienteempresa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `contratacion`
+-- AUTO_INCREMENT for table `contratacion`
 --
 ALTER TABLE `contratacion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `documento`
+-- AUTO_INCREMENT for table `documento`
 --
 ALTER TABLE `documento`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT de la tabla `evento`
+-- AUTO_INCREMENT for table `evento`
 --
 ALTER TABLE `evento`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `incidencia`
+-- AUTO_INCREMENT for table `incidencia`
 --
 ALTER TABLE `incidencia`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `institucion`
+-- AUTO_INCREMENT for table `institucion`
 --
 ALTER TABLE `institucion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `materia`
+-- AUTO_INCREMENT for table `materia`
 --
 ALTER TABLE `materia`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT de la tabla `personal`
+-- AUTO_INCREMENT for table `personal`
 --
 ALTER TABLE `personal`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT de la tabla `servicio`
+-- AUTO_INCREMENT for table `servicio`
 --
 ALTER TABLE `servicio`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `usuario`
+-- AUTO_INCREMENT for table `usuario`
 --
 ALTER TABLE `usuario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `clienteempresa`
+-- Constraints for table `clienteempresa`
 --
 ALTER TABLE `clienteempresa`
   ADD CONSTRAINT `clienteempresa_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `contratacion`
+-- Constraints for table `contratacion`
 --
 ALTER TABLE `contratacion`
   ADD CONSTRAINT `contratacion_ibfk_1` FOREIGN KEY (`clienteId`) REFERENCES `clienteempresa` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `contratacion_ibfk_2` FOREIGN KEY (`servicioId`) REFERENCES `servicio` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `documento`
+-- Constraints for table `documento`
 --
 ALTER TABLE `documento`
   ADD CONSTRAINT `documento_ibfk_1` FOREIGN KEY (`materiaId`) REFERENCES `materia` (`id`) ON DELETE SET NULL,
@@ -449,31 +450,31 @@ ALTER TABLE `documento`
   ADD CONSTRAINT `documento_ibfk_3` FOREIGN KEY (`institucionId`) REFERENCES `institucion` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `evento`
+-- Constraints for table `evento`
 --
 ALTER TABLE `evento`
   ADD CONSTRAINT `evento_ibfk_1` FOREIGN KEY (`institucionId`) REFERENCES `institucion` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `incidencia`
+-- Constraints for table `incidencia`
 --
 ALTER TABLE `incidencia`
   ADD CONSTRAINT `incidencia_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `materia`
+-- Constraints for table `materia`
 --
 ALTER TABLE `materia`
   ADD CONSTRAINT `materia_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `materia` (`id`) ON DELETE SET NULL;
 
 --
--- Filtros para la tabla `personal`
+-- Constraints for table `personal`
 --
 ALTER TABLE `personal`
   ADD CONSTRAINT `personal_ibfk_1` FOREIGN KEY (`institucionId`) REFERENCES `institucion` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `servicio`
+-- Constraints for table `servicio`
 --
 ALTER TABLE `servicio`
   ADD CONSTRAINT `servicio_ibfk_1` FOREIGN KEY (`institucionId`) REFERENCES `institucion` (`id`) ON DELETE CASCADE;
