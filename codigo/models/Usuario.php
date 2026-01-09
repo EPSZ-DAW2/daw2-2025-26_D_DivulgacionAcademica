@@ -152,5 +152,36 @@ class Usuario extends \yii\db\ActiveRecord
     //---*/
     
   }
-  
+
+    // Implementacion de las vistas restringidas de usuario
+
+    // 1. Definicion de las constantes para los roles (es como creo que sale mejor hacerlo)
+    //    - Estos roles se pueden cambiar en cualquier momento de ser posible solo cambia el nombre depues del igual ya que las constantes es muy probable que de error
+    const ROL_ADMIN = 'admin';
+    const ROL_GESTOR = 'gestor';
+    const ROL_EMPRESA = 'empresa';
+    const ROL_ESTUDIANTE = 'estudiante';
+
+    // 2. Implementacion de los metodos llamados por los controladores (los archivos dentro de /codigo/controllers/)
+
+    /**
+     * Usado por LogVisitaController
+     * Devuelve true si el usuario puede ver el backend/panel de administrador
+     */
+    public function puedeAccederBackend()
+    {
+        // Por ejemplo solo el administrador y el gestor pueden ver el backend (panel de administrador)
+        return $this->rol === self::ROL_ADMIN || $this->rol === self::ROL_GESTOR;
+    }
+
+    /**
+     * Usado por UsuarioController
+     * Devuelve true si el usuario puede crear, editar o borrar a otros usuarios
+     */
+    public function puedeGestionarUsuarios()
+    {
+        // Por ejemplo el administrador es el unico con este poder
+        return $this->rol === self::ROL_ADMIN;
+    }
+
 }
