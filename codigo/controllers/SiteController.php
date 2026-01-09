@@ -197,4 +197,15 @@ class SiteController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    
+    /**
+	 * Displays Q&A page.
+	 *
+	 * @return string
+	 */
+	public function actionQa()
+	{
+		return $this->render('qa');
+	}
+
 }
