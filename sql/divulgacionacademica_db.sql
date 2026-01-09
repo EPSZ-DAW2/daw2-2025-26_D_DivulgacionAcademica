@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-01-2026 a las 16:54:34
+-- Tiempo de generación: 09-01-2026 a las 19:32:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -405,6 +405,111 @@ INSERT INTO `personal` (`id`, `nombre`, `apellidos`, `institucionId`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `pregunta`
+--
+
+CREATE TABLE `pregunta` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `descripcion` text NOT NULL,
+  `fecha_creacion` datetime DEFAULT current_timestamp(),
+  `vistas` int(11) DEFAULT 0,
+  `votos_utiles` int(11) DEFAULT 0,
+  `estado` enum('sin_responder','respondida','resuelta') DEFAULT 'sin_responder',
+  `usuarioId` int(11) NOT NULL,
+  `materiaId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pregunta`
+--
+
+INSERT INTO `pregunta` (`id`, `titulo`, `descripcion`, `fecha_creacion`, `vistas`, `votos_utiles`, `estado`, `usuarioId`, `materiaId`) VALUES
+(1, '¿Cómo implementar recursividad en Python?', 'No entiendo bien el caso base en las funciones recursivas. ¿Alguien tiene un ejemplo simple con factoriales?', '2026-01-05 10:30:00', 23, 2, 'sin_responder', 16, 25),
+(2, 'Diferencia conceptual entre derivada e integral', 'Entiendo cómo calcularlas, pero no entiendo qué significan en la vida real. ¿Ayuda?', '2026-01-06 14:15:00', 156, 5, 'resuelta', 9, 72),
+(3, 'Trucos para memorizar Phrasal Verbs', 'Son demasiados y me confundo entre \"get on\", \"get in\", \"get by\". ¿Algún consejo?', '2026-01-04 09:00:00', 342, 10, 'respondida', 8, 7),
+(4, 'Demostración visual de Pitágoras', 'Busco una explicación geométrica, no solo la fórmula a^2 + b^2 = c^2.', '2026-01-02 18:20:00', 198, 3, 'resuelta', 15, 73),
+(5, 'Organización de la Tabla Periódica', '¿Por qué los gases nobles están a la derecha del todo?', '2026-01-07 11:45:00', 67, 0, 'sin_responder', 13, 32);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pregunta_guardada`
+--
+
+CREATE TABLE `pregunta_guardada` (
+  `usuarioId` int(11) NOT NULL,
+  `preguntaId` int(11) NOT NULL,
+  `fecha_guardado` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pregunta_guardada`
+--
+
+INSERT INTO `pregunta_guardada` (`usuarioId`, `preguntaId`, `fecha_guardado`) VALUES
+(8, 5, '2026-01-09 19:24:04'),
+(9, 1, '2026-01-09 19:24:04'),
+(16, 2, '2026-01-09 19:24:04'),
+(16, 3, '2026-01-09 19:24:04');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pregunta_voto`
+--
+
+CREATE TABLE `pregunta_voto` (
+  `usuarioId` int(11) NOT NULL,
+  `preguntaId` int(11) NOT NULL,
+  `fecha_voto` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pregunta_voto`
+--
+
+INSERT INTO `pregunta_voto` (`usuarioId`, `preguntaId`, `fecha_voto`) VALUES
+(8, 2, '2026-01-09 19:22:14'),
+(8, 4, '2026-01-09 19:22:14'),
+(9, 1, '2026-01-09 19:22:14'),
+(10, 2, '2026-01-09 19:22:14'),
+(11, 2, '2026-01-09 19:22:14'),
+(13, 2, '2026-01-09 19:22:14'),
+(13, 4, '2026-01-09 19:22:14'),
+(15, 2, '2026-01-09 19:22:14'),
+(16, 4, '2026-01-09 19:22:14'),
+(20, 1, '2026-01-09 19:22:14');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `respuesta`
+--
+
+CREATE TABLE `respuesta` (
+  `id` int(11) NOT NULL,
+  `contenido` text NOT NULL,
+  `fecha` datetime DEFAULT current_timestamp(),
+  `es_solucion` tinyint(1) DEFAULT 0,
+  `preguntaId` int(11) NOT NULL,
+  `usuarioId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `respuesta`
+--
+
+INSERT INTO `respuesta` (`id`, `contenido`, `fecha`, `es_solucion`, `preguntaId`, `usuarioId`) VALUES
+(1, 'La derivada es la velocidad del coche (ritmo de cambio) y la integral es la distancia total recorrida.', '2026-01-06 15:00:00', 1, 2, 14),
+(2, 'Matemáticamente son operaciones inversas, como la multiplicación y la división.', '2026-01-06 16:30:00', 0, 2, 20),
+(3, 'Intenta agruparlos por tema en lugar de por verbo. Por ejemplo, todos los que sirven para \"viajar\".', '2026-01-04 12:00:00', 0, 3, 11),
+(4, 'Yo uso tarjetas de memoria (Flashcards) con la app Anki, funciona muy bien.', '2026-01-05 09:15:00', 0, 3, 10),
+(5, 'Imagina un cuadrado construido sobre cada lado del triángulo. El área del cuadrado grande es igual a la suma de las áreas de los pequeños.', '2026-01-03 10:00:00', 1, 4, 24);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `servicio`
 --
 
@@ -586,6 +691,36 @@ ALTER TABLE `personal`
   ADD KEY `institucionId` (`institucionId`);
 
 --
+-- Indices de la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_pregunta_usuario` (`usuarioId`),
+  ADD KEY `fk_pregunta_materia` (`materiaId`);
+
+--
+-- Indices de la tabla `pregunta_guardada`
+--
+ALTER TABLE `pregunta_guardada`
+  ADD PRIMARY KEY (`usuarioId`,`preguntaId`),
+  ADD KEY `fk_pg_pregunta` (`preguntaId`);
+
+--
+-- Indices de la tabla `pregunta_voto`
+--
+ALTER TABLE `pregunta_voto`
+  ADD PRIMARY KEY (`usuarioId`,`preguntaId`),
+  ADD KEY `fk_pv_pregunta` (`preguntaId`);
+
+--
+-- Indices de la tabla `respuesta`
+--
+ALTER TABLE `respuesta`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_respuesta_pregunta` (`preguntaId`),
+  ADD KEY `fk_respuesta_usuario` (`usuarioId`);
+
+--
 -- Indices de la tabla `servicio`
 --
 ALTER TABLE `servicio`
@@ -664,6 +799,18 @@ ALTER TABLE `personal`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
+-- AUTO_INCREMENT de la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `respuesta`
+--
+ALTER TABLE `respuesta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de la tabla `servicio`
 --
 ALTER TABLE `servicio`
@@ -735,6 +882,34 @@ ALTER TABLE `materia`
 --
 ALTER TABLE `personal`
   ADD CONSTRAINT `personal_ibfk_1` FOREIGN KEY (`institucionId`) REFERENCES `institucion` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  ADD CONSTRAINT `fk_pregunta_materia` FOREIGN KEY (`materiaId`) REFERENCES `materia` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_pregunta_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pregunta_guardada`
+--
+ALTER TABLE `pregunta_guardada`
+  ADD CONSTRAINT `fk_pg_pregunta` FOREIGN KEY (`preguntaId`) REFERENCES `pregunta` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pg_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pregunta_voto`
+--
+ALTER TABLE `pregunta_voto`
+  ADD CONSTRAINT `fk_pv_pregunta` FOREIGN KEY (`preguntaId`) REFERENCES `pregunta` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pv_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `respuesta`
+--
+ALTER TABLE `respuesta`
+  ADD CONSTRAINT `fk_respuesta_pregunta` FOREIGN KEY (`preguntaId`) REFERENCES `pregunta` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_respuesta_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `servicio`
