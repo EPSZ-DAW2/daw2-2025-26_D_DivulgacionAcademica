@@ -55,39 +55,53 @@ class ColeccionController extends Controller
     /**
      * Listado principal (público o admin según rol).
      */
-    public function actionIndex()
-    {
-        $user = Yii::$app->user->identity;
-        $query = Coleccion::find()->with('usuario');
+public function actionIndex()
+{
+    $user = Yii::$app->user->identity;
+    $query = Coleccion::find()->with('usuario');
 
-        // Si es Admin o Gestor, mostramos la vista de administración
-        if ($user && ($user->rol === 'admin' || $user->rol === 'gestor')) {
-            $colecciones = $query->all();
-            return $this->render('admin', [
-                'colecciones' => $colecciones,
-                'esAdmin' => ($user->rol === 'admin')
-            ]);
-        }
-
-        // Vista pública para alumnos e invitados
-        $colecciones = $query->all();
-        return $this->render('index', ['colecciones' => $colecciones]);
+    // 1. ADMIN / GESTOR: Vista de administración pura (sin lateral)
+    if ($user && ($user->rol === 'admin' || $user->rol === 'gestor')) {
+        return $this->render('admin', [
+            'colecciones' => $query->all(),
+            'esAdmin' => ($user->rol === 'admin')
+        ]);
     }
+
+    // 2. ALUMNOS: Cargamos sus suscripciones para el lateral
+    $misColecciones = [];
+    if ($user && $user->rol === 'alumno') {
+        $misColecciones = Coleccion::find()
+            ->innerJoin('usuario_coleccion', 'coleccion.id = usuario_coleccion.coleccionId')
+            ->where(['usuario_coleccion.usuarioId' => $user->id])
+            ->all();
+    }
+
+    // 3. RETORNO: Alumnos e Invitados comparten 'index.php' pero con datos distintos
+    return $this->render('index', [
+        'colecciones' => $query->all(),
+        'misColecciones' => $misColecciones,
+    ]);
+}
 
     /**
      * Ver contenido de una colección (Información + Documentos).
      */
-    public function actionView($id)
-    {
-        $coleccion = $this->findModel($id);
-        // Traemos los documentos asociados a través de la relación coleccion_documento
-        $documentos = $coleccion->documentos; 
+    public function actionView($id, $docId = null)
+{
+    $coleccion = $this->findModel($id);
+    $selectedDoc = null;
 
-        return $this->render('view', [
-            'coleccion' => $coleccion,
-            'documentos' => $documentos,
-        ]);
+    // Si el usuario pulsó en "Ver Material", cargamos los datos del documento
+    if ($docId) {
+        $selectedDoc = \app\models\Documento::findOne($docId);
     }
+
+    return $this->render('view', [
+        'coleccion' => $coleccion,
+        'selectedDoc' => $selectedDoc, // Pasamos el documento seleccionado a la vista
+    ]);
+}
 
     /**
      * Crear una nueva colección.

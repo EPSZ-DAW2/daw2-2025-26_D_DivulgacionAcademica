@@ -2,8 +2,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/** @var yii\web\View $this */
 /** @var app\models\Coleccion $coleccion */
+/** @var app\models\Documento|null $selectedDoc */
 
 $this->title = $coleccion->titulo;
 ?>
@@ -19,78 +19,80 @@ $this->title = $coleccion->titulo;
                     <span class="badge badge--inverse">&#11015;&#65039; <?= $coleccion->descargas ?> descargas</span>
                 </div>
             </div>
-
-            <div class="flex gap-4">
-                <?php if (Yii::$app->user->isGuest): ?>
-                    <?= Html::a('&#128274; Inicia sesión para descargar', ['site/login'], [
-                        'class' => 'btn btn--white',
-                        'style' => 'color: var(--color-error); font-weight: bold;',
-                ]) ?>
-                <?php else: ?>
-                    <?= Html::a('&#11015;&#65039; Descargar PDF', ['download', 'id' => $coleccion->id], [
-                        'class' => 'btn btn--white',
-                        'style' => 'color: var(--color-primary); font-weight: bold;',
-                ]) ?>
-                <?php endif; ?>
-            </div>
+            <?= Html::a('&#11015;&#65039; Descargar PDF', ['download', 'id' => $coleccion->id], ['class' => 'btn btn--white', 'style' => 'color: var(--color-primary); font-weight: bold;']) ?>
         </div>
     </header>
 
-    <div class="materials-layout">
-        <div class="flex-column gap-6">
+    <div class="grid grid--cols-1 grid--lg-cols-3 gap-8">
+        <div class="grid--lg-cols-1 flex-column gap-6">
             <h2 class="section-title mb-6">Materiales incluidos</h2>
-            
-            <?php if (!empty($coleccion->documentos)): ?>
-                <div class="grid grid--cols-1 grid--md-cols-2 gap-6">
-                    <?php foreach ($coleccion->documentos as $doc): ?>
-                        <article class="card flex flex-column">
-                            <div class="card__body flex-1">
-                                <div class="flex justify-between align-center mb-4">
-                                    <span class="badge badge--primary"><?= strtoupper($doc->tipo_acceso) ?></span>
-                                    <span class="text-tertiary" style="font-size: var(--font-size-xs)">Ref: #<?= $doc->id ?></span>
-                                </div>
-                                <h3 class="material-card__title" style="font-size: var(--font-size-lg)">
-                                    <?= Html::encode($doc->titulo) ?>
-                                </h3>
-                                <p class="material-card__meta mt-4">
-                                    <span class="material-card__category">&#128193; Materia ID: <?= $doc->materiaId ?></span>
-                                </p>
+            <div class="grid grid--cols-1 gap-4">
+                <?php foreach ($coleccion->documentos as $doc): ?>
+                    <article class="card <?= ($selectedDoc && $selectedDoc->id == $doc->id) ? 'border-primary' : '' ?>">
+                        <div class="card__body">
+                            <div class="flex justify-between mb-4">
+                                <span class="badge badge--primary"><?= strtoupper($doc->tipo_acceso) ?></span>
+                                <span class="text-tertiary" style="font-size: var(--font-size-xs)">Ref: #<?= $doc->id ?></span>
                             </div>
-                            <div class="card__footer bg-secondary">
-                                <?= Html::a('Ver Material', ['documento/view', 'id' => $doc->id], [
-                                    'class' => 'btn btn--ghost btn--sm btn--block'
-                                ]) ?>
-                            </div>
-                        </article>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <div class="alert alert--info">
-                    <p class="mb-0">Esta colección todavía no tiene materiales académicos vinculados.</p>
-                </div>
-            <?php endif; ?>
+                            <h3 class="material-card__title" style="font-size: var(--font-size-md)"><?= Html::encode($doc->titulo) ?></h3>
+                        </div>
+                        <div class="card__footer bg-secondary">
+                            <?= Html::a('Ver Material', ['view', 'id' => $coleccion->id, 'docId' => $doc->id], ['class' => 'btn btn--ghost btn--sm btn--block']) ?>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
         </div>
 
-        <aside class="filters-sidebar">
-            <h3 class="filters__title">Sobre esta colección</h3>
-            <div class="material-description">
-                <p><?= nl2br(Html::encode($coleccion->descripcion)) ?></p>
-            </div>
-            
-            <div class="flex flex-column gap-4 mt-8 pt-6" style="border-top: 1px solid var(--color-gray-300)">
-                <?php if (!Yii::$app->user->isGuest): ?>
-                    <?php 
-                    $user = Yii::$app->user->identity;
-                    if ($user->rol === 'admin' || $user->id === $coleccion->usuarioId): 
-                    ?>
-                        <?= Html::a('&#9998; Editar Colección', ['update', 'id' => $coleccion->id], [
-                            'class' => 'btn btn--outline btn--block'
-                        ]) ?>
+        <div class="grid--lg-cols-2">
+            <div class="card h-full" style="min-height: 600px;">
+                <div class="card__header border-bottom bg-secondary flex justify-between align-center">
+                    <h3 class="card__title mt-0 mb-0">
+                        <?= $selectedDoc ? 'Vista Previa: ' . Html::encode($selectedDoc->titulo) : 'Sobre esta colección' ?>
+                    </h3>
+                    <?php if ($selectedDoc): ?>
+                        <?= Html::a('&#10005;', ['view', 'id' => $coleccion->id], ['class' => 'text-tertiary', 'title' => 'Cerrar vista previa']) ?>
                     <?php endif; ?>
-                <?php endif; ?>
+                </div>
+                
+                <div class="card__body p-8">
+                    <?php if ($selectedDoc): ?>
+                        <div class="visor-container mb-6" style="background: #525659; padding: 20px; border-radius: var(--border-radius-md);">
+                            <div style="background: white; padding: 40px; box-shadow: var(--shadow-md); min-height: 400px; position: relative;">
+                                <h4 class="text-center mb-6" style="border-bottom: 1px solid #eee; padding-bottom: 10px;"><?= Html::encode($selectedDoc->titulo) ?></h4>
+                                <div style="filter: blur(3px); opacity: 0.4; pointer-events: none;">
+                                    <p>Contenido académico de la materia <?= Html::encode($selectedDoc->materia->nombre) ?>. Este documento ha sido emitido por <?= Html::encode($selectedDoc->institucion->nombre) ?>...</p>
+                                    <div style="background: #f0f0f0; height: 10px; width: 80%; margin-bottom: 10px;"></div>
+                                    <div style="background: #f0f0f0; height: 10px; width: 90%; margin-bottom: 10px;"></div>
+                                    <div style="background: #f0f0f0; height: 10px; width: 70%;"></div>
+                                </div>
+                                <div class="flex justify-center" style="position: absolute; bottom: 40px; left: 0; right: 0;">
+                                    <span class="badge badge--primary">Modo lectura rápida</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between align-center p-4 bg-secondary border-radius-md">
+                            <div>
+                                <p class="mb-0"><strong>Autor:</strong> <?= Html::encode($selectedDoc->autor->nombre) ?></p>
+                                <p class="text-tertiary mb-0" style="font-size: var(--font-size-sm)">Formato: PDF Original</p>
+                            </div>
+                            <?= Html::a('&#11015;&#65039; Descargar Material', ['documento/download', 'id' => $selectedDoc->id], ['class' => 'btn btn--primary']) ?>
+                        </div>
 
-                <?= Html::a('&larr; Volver al listado', ['index'], ['class' => 'btn btn--ghost btn--block']) ?>
+                    <?php else: ?>
+                        <p class="material-description" style="font-size: var(--font-size-lg); line-height: 1.8;">
+                            <?= nl2br(Html::encode($coleccion->descripcion)) ?>
+                        </p>
+                        <div class="mt-12 p-8 text-center border-radius-md" style="border: 2px dashed var(--color-gray-200);">
+                            <p class="text-secondary">Selecciona un material de la izquierda para previsualizarlo aquí mismo.</p>
+                        </div>
+                        <div class="mt-8">
+                            <?= Html::a('&larr; Volver al listado', ['index'], ['class' => 'btn btn--ghost']) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
-        </aside>
+        </div>
     </div>
 </div>
