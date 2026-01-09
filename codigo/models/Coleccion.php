@@ -66,4 +66,27 @@ class Coleccion extends ActiveRecord
     {
         return $this->hasOne(Usuario::class, ['id' => 'usuarioId']);
     }
+
+    /**
+ * Relación con los Documentos (Muchos a Muchos)
+ * A través de la tabla de unión coleccion_documento
+ */
+public function getDocumentos()
+{
+    return $this->hasMany(Documento::class, ['id' => 'documentoId'])
+        ->viaTable('coleccion_documento', ['coleccionId' => 'id']);
+}
+
+/**
+ * Verifica si un usuario específico ya está unido a esta colección
+ */
+public function estaUnido($usuarioId)
+{
+    return (new \yii\db\Query())
+        ->from('usuario_coleccion')
+        ->where(['usuarioId' => $usuarioId, 'coleccionId' => $this->id])
+        ->exists();
+}
+
+
 }
