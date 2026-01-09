@@ -7,7 +7,7 @@ use app\assets\AppAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-// Registramos tus estilos
+// Registrr estilos
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -43,6 +43,12 @@ AppAsset::register($this);
             <li><a href="<?= Url::to(['/site/login']) ?>" class="nav__link">Iniciar sesión</a></li>
             <li><a href="<?= Url::to(['/site/register']) ?>" class="btn btn--primary btn--sm">Registrarse</a></li>
           <?php else: ?>
+            <li>
+                <a href="<?= Url::to(['/materiales/subir']) ?>" class="btn btn--primary btn--sm" style="background-color: #28a745; border-color: #28a745;">
+                    📤 Subir
+                </a>
+            </li>
+
             <li><a href="<?= Url::to(['/site/profile']) ?>" class="nav__link">Mi Perfil</a></li>
              <li>
                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
@@ -74,7 +80,7 @@ AppAsset::register($this);
             <li class="footer__list-item"><a href="<?= Url::to(['/materiales/index']) ?>" class="footer__link">Explorar materiales</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/coleccion/index']) ?>" class="footer__link">Colecciones</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/dudas/index']) ?>" class="footer__link">Preguntas y respuestas</a></li>
-            <li class="footer__list-item"><a href="<?= Url::to(['/materiales/create']) ?>" class="footer__link">Subir material</a></li>
+            <li class="footer__list-item"><a href="<?= Url::to(['/materiales/subir']) ?>" class="footer__link">Subir material</a></li>
           </ul>
         </div>
         
