@@ -1,7 +1,7 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
+DROP DATABASE IF EXISTS divulgacionacademica_db;
 -- Crear base de datos
 CREATE DATABASE IF NOT EXISTS divulgacionacademica_db;
 USE divulgacionacademica_db;
@@ -204,40 +204,100 @@ INSERT INTO `personal` (`id`, `nombre`, `apellidos`, `institucionId`) VALUES
 (6, 'Frau', 'Müller', 3);
 
 -- documento
-INSERT INTO `documento` (`titulo`, `archivo_url`, `tipo_acceso`, `materiaId`, `autorId`, `institucionId`) VALUES
-('Cálculo Integral: Guía de Supervivencia', 'calculo_int.pdf', 'publico', 9, 2, 1),
-('Algoritmos y Estructuras de Datos en JS', 'algoritmos_js.pdf', 'publico', 4, 4, 2),
-('Seguridad en Redes WiFi', 'wifi_security.pdf', 'privado', 5, 3, 2),
-('Diccionario Técnico Alemán-Español', 'diccionario_de.pdf', 'publico', 8, 6, 3),
-('Normalización de Bases de Datos (1NF a 5NF)', 'sql_norm.pdf', 'privado', 6, 3, 2),
-('Introducción a la Mecánica Cuántica', 'cuantica_intro.pdf', 'publico', 1, 1, 1),
-('CSS Grid y Flexbox: Masterclass', 'css_master.pdf', 'publico', 11, 4, 2),
-('React Query y Gestión de Estado', 'react_state.pdf', 'privado', 11, 4, 2),
-('Configuración de Firewalls Linux', 'linux_fw.pdf', 'privado', 5, 3, 2);
+INSERT INTO `documento` (`id`, `titulo`, `archivo_url`, `tipo_acceso`, `materiaId`, `autorId`, `institucionId`) VALUES
+(1, 'Plan de Estudios 2025', 'plan2025.pdf', 'publico', 1, 1, 1),
+(2, 'Tesis Doctoral: IA Generativa', 'tesis_ia.pdf', 'publico', 1, 1, 1),
+(3, 'Ejercicios de Álgebra Lineal', 'algebra_ej.pdf', 'privado', 9, 2, 1),
+(4, 'Guía Definitiva de React Hooks', 'react_guide.pdf', 'publico', 11, 4, 2),
+(5, 'Manual de Hacking Ético', 'hacking_v1.pdf', 'privado', 5, 3, 2),
+(6, 'Cheat Sheet PHP 8.2', 'php_resumen.pdf', 'publico', 12, 4, 2),
+(7, 'Laboratorio SQL Avanzado', 'sql_lab.pdf', 'privado', 6, 3, 2),
+(8, 'Phrasal Verbs List', 'phrasal_verbs.pdf', 'publico', 7, 5, 3),
+(9, 'German Grammar B1', 'deutsch_b1.pdf', 'privado', 8, 6, 3),
+(10, 'Cálculo Diferencial Avanzado', 'calculo_av.pdf', 'publico', 9, 2, 1),
+(11, 'Redes de Computadoras', 'redes_comp.pdf', 'privado', 5, 3, 2),
+(12, 'Introducción a Node.js', 'nodejs_intro.pdf', 'publico', 12, 4, 2),
+(13, 'Seguridad en la Nube', 'cloud_sec.pdf', 'privado', 5, 3, 2),
+(14, 'JavaScript ES6+ Resumen', 'js_es6.pdf', 'publico', 11, 4, 2),
+(15, 'Modelado de Datos NoSQL', 'nosql_model.pdf', 'privado', 6, 3, 2),
+(16, 'Inglés para Negocios', 'business_eng.pdf', 'publico', 7, 5, 3),
+(17, 'Física Clásica: Cinemática', 'fisica_cin.pdf', 'publico', 1, 1, 1),
+(18, 'Despliegue con Docker', 'docker_deploy.pdf', 'privado', 12, 4, 2),
+(19, 'Principios de UI/UX', 'ui_ux_basics.pdf', 'publico', 4, 4, 2),
+(20, 'Cálculo Integral: Guía Práctica', 'calculo_practica.pdf', 'publico', 9, 2, 1),
+(21, 'Fundamentos de Redes Neuronales', 'redes_neuronales.pdf', 'publico', 1, 1, 1),
+(22, 'Seguridad en Aplicaciones Móviles', 'mobile_sec.pdf', 'privado', 5, 3, 2),
+(23, 'Patrones de Diseño en JS', 'js_patterns.pdf', 'publico', 11, 4, 2),
+(24, 'Optimización de Queries MySQL', 'mysql_opt.pdf', 'privado', 6, 3, 2),
+(25, 'Gramática Alemana Ingenieros', 'aleman_ing.pdf', 'publico', 8, 6, 3),
+(26, 'Docker y Kubernetes Pro', 'k8s_pro.pdf', 'privado', 12, 4, 2);
 
 -- coleccion
-INSERT INTO `coleccion` (`id`, `titulo`, `descripcion`, `usuarioId`, `descargas`, `fecha_actualizacion`) VALUES
-(1, 'Matemáticas para Ingeniería', 'Materiales de cálculo y álgebra.', 9, 2350, '2026-01-05 10:00:00'),
-(2, 'Programación Web Full Stack', 'HTML, CSS y JS.', 8, 1890, '2026-01-01 12:30:00'),
-(4, 'Seguridad Informática Avanzada', 'Hacking ético y auditoría.', 2, 3100, '2026-01-07 14:00:00'),
-(6, 'Bases de Datos con SQL', 'Diseño y optimización SQL.', 12, 1200, '2026-01-02 11:45:00');
+INSERT INTO `coleccion` (`id`, `titulo`, `descripcion`, `usuarioId`, `descargas`) VALUES
+(1, 'Matemáticas para Ingeniería', 'Recursos de cálculo y álgebra lineal.', 9, 120),
+(2, 'Desarrollo Frontend Moderno', 'React, JS y diseño UI/UX.', 8, 450),
+(3, 'Ciberseguridad y Redes', 'Hacking ético y seguridad cloud.', 2, 320),
+(4, 'Backend con PHP y Node', 'Servidores, Docker y APIs.', 3, 210),
+(5, 'Base de Datos Relacionales', 'SQL avanzado y optimización.', 12, 180),
+(6, 'Idiomas para Profesionales', 'Alemán e inglés técnico.', 11, 95),
+(7, 'Inteligencia Artificial', 'Redes neuronales y fundamentos de IA.', 1, 560),
+(8, 'Sistemas Operativos', 'Linux y gestión de servidores.', 2, 140),
+(9, 'Física y Ciencias', 'Cinemática y tesis doctorales.', 10, 80),
+(10, 'Herramientas de Devops', 'Contenedores y automatización.', 4, 275);
 
 -- coleccion_documento
 INSERT INTO `coleccion_documento` (`coleccionId`, `documentoId`) VALUES
-(1, 20), -- Matemáticas -> Cálculo
-(2, 21), -- Web -> Algoritmos
-(4, 22), -- Seguridad -> WiFi
-(5, 23), -- Alemán -> Diccionario
-(6, 24), -- SQL -> Normalización
-(2, 26), -- Web -> CSS Grid
-(2, 27), -- Web -> React Query
-(4, 28); -- Seguridad -> Linux FW
+-- Colección 1 (Matemáticas): Docs 3, 10, 20
+(1, 3), (1, 10), (1, 20),
+-- Colección 2 (Frontend): Docs 4, 14, 19, 23
+(2, 4), (2, 14), (2, 19), (2, 23),
+-- Colección 3 (Ciberseguridad): Docs 5, 11, 13, 22
+(3, 5), (3, 11), (3, 13), (3, 22),
+-- Colección 4 (Backend): Docs 6, 12, 18
+(4, 6), (4, 12), (4, 18),
+-- Colección 5 (Bases de Datos): Docs 7, 15, 24
+(5, 7), (5, 15), (5, 24),
+-- Colección 6 (Idiomas): Docs 8, 9, 16, 25
+(6, 8), (6, 9), (6, 16), (6, 25),
+-- Colección 7 (IA): Docs 2, 21
+(7, 2), (7, 21),
+-- Colección 8 (Sistemas): Docs 18, 26
+(8, 18), (8, 26),
+-- Colección 9 (Física): Docs 1, 17
+(9, 1), (9, 17),
+-- Colección 10 (Devops): Docs 18, 26
+(10, 18), (10, 26);
 
 -- usuario_coleccion
 INSERT INTO `usuario_coleccion` (`usuarioId`, `coleccionId`, `fecha_union`) VALUES
-(9, 2, '2026-01-08 10:00:00'),
-(8, 1, '2026-01-07 15:30:00'),
-(16, 4, '2026-01-09 09:15:00'),
-(16, 6, '2026-01-09 09:20:00');
+-- Carlos Pérez (ID 8) se interesa por el desarrollo y sistemas
+(8, 2, '2026-01-05 09:00:00'), -- Frontend
+(8, 4, '2026-01-05 10:30:00'), -- Backend
+(8, 8, '2026-01-06 11:00:00'), -- Sistemas Operativos
+
+-- María García (ID 9) se enfoca en IA y Matemáticas
+(9, 1, '2026-01-04 15:20:00'), -- Matemáticas
+(9, 7, '2026-01-07 12:00:00'), -- IA
+(9, 9, '2026-01-08 09:45:00'), -- Física
+
+-- Lucía Méndez (ID 10) estudia Ciberseguridad e Idiomas
+(10, 3, '2026-01-02 14:00:00'), -- Ciberseguridad
+(10, 6, '2026-01-03 16:30:00'), -- Idiomas
+
+-- David Torres (ID 11) se especializa en Infraestructura
+(11, 10, '2026-01-08 10:00:00'), -- Devops
+(11, 8, '2026-01-08 11:15:00'),  -- Sistemas Operativos
+(11, 3, '2026-01-09 08:30:00'),  -- Ciberseguridad
+
+-- Elena Nito (ID 12) centrada en Datos
+(12, 5, '2026-01-07 13:45:00'), -- Bases de Datos
+(12, 7, '2026-01-08 17:20:00'), -- IA
+
+-- Juan Riego Vila (ID 16) tiene un perfil variado
+(16, 1, '2026-01-09 10:00:00'), -- Matemáticas
+(16, 2, '2026-01-09 10:05:00'), -- Frontend
+(16, 5, '2026-01-09 10:10:00'), -- Bases de Datos
+(16, 10, '2026-01-09 10:15:00');-- Devops
+
 
 COMMIT;
