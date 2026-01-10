@@ -34,10 +34,11 @@ class Coleccion extends ActiveRecord
     {
         return [
             [['titulo', 'usuarioId'], 'required'],
-            [['descripcion'], 'string'],
+            [['descripcion', 'tipo_acceso'], 'string'],
             [['usuarioId', 'descargas'], 'integer'],
             [['fecha_actualizacion'], 'safe'],
-            [['titulo'], 'string', 'max' => 150],
+            [['tipo_acceso'], 'in', 'range' => ['publico', 'privado']],
+            [['titulo'], 'string', 'max' => 255],
             // Relación de clave foránea con la tabla usuario
             [['usuarioId'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['usuarioId' => 'id']],
         ];
@@ -87,6 +88,17 @@ public function estaUnido($usuarioId)
         ->where(['usuarioId' => $usuarioId, 'coleccionId' => $this->id])
         ->exists();
 }
+
+/**
+ * Relación con los usuarios que se han unido a esta colección
+ */
+public function getUsuarios()
+{
+    // Una colección tiene muchos usuarios a través de la tabla usuario_coleccion
+    return $this->hasMany(Usuario::class, ['id' => 'usuarioId'])
+                ->viaTable('usuario_coleccion', ['coleccionId' => 'id']);
+}
+
 
 
 }

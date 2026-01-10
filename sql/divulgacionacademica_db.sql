@@ -969,16 +969,18 @@ ALTER TABLE `servicio`
 --
 
 -- TABLA: coleccion
+DROP TABLE IF EXISTS `coleccion`;
 CREATE TABLE `coleccion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(150) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
   `descripcion` text DEFAULT NULL,
   `usuarioId` int(11) NOT NULL,
   `descargas` int(11) DEFAULT 0,
-  `fecha_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `tipo_acceso` enum('publico','privado') NOT NULL DEFAULT 'publico',
+  `fecha_actualizacion` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_coleccion_usuario` FOREIGN KEY (`usuarioId`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT=7;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- TABLA: coleccion_documento (Relación N:M)
 CREATE TABLE `coleccion_documento` (
@@ -1001,23 +1003,22 @@ CREATE TABLE `usuario_coleccion` (
 
 -- INSERTS
 
-INSERT INTO `coleccion` (`id`, `titulo`, `descripcion`, `usuarioId`, `descargas`) VALUES
-(1, 'Matemáticas de Ingeniería', 'Cálculo diferencial, integral y vectores en 3D.', 10, 450),
-(2, 'Desarrollo Frontend Moderno', 'Dominando React Hooks y composición visual.', 4, 1200),
-(3, 'Ciberseguridad y Redes', 'Hacking ético, SQL avanzado y seguridad en redes.', 3, 890),
-(4, 'Idiomas y Cultura Global', 'Francés, Alemán, Italiano y cultura japonesa.', 6, 340),
-(5, 'Historia y Civilizaciones', 'Del Renacimiento a la Guerra Civil Española.', 18, 560),
-(6, 'Biología y Genética 2026', 'Edición genética CRISPR y Atlas Celular.', 10, 210),
-(7, 'Física y Química General', 'Leyes de Newton, óptica y nomenclatura de carbono.', 15, 670),
-(8, 'Economía y Finanzas', 'Oferta, demanda, contabilidad e interés compuesto.', 5, 430),
-(9, 'Arte y Composición Visual', 'Teoría del color, fotografía y diseño gráfico.', 11, 780),
-(10, 'IA y Neurociencia', 'Redes neuronales y plasticidad cerebral.', 1, 1500),
-(11, 'Programación con Python', 'Desde Hola Mundo hasta estructuras de datos.', 17, 920),
-(12, 'Tecnología Móvil y Apps', 'Desarrollo en Android y estrategias móviles.', 21, 310),
-(13, 'Producción Musical Pro', 'Mezcla, ecualización y teoría musical.', 11, 150),
-(14, 'Zoología y Ecosistemas', 'Fauna ibérica e invertebrados marinos.', 10, 85),
-(15, 'Sostenibilidad y Marketing', 'Economía circular y tendencias de mercado.', 22, 195);
-
+INSERT INTO `coleccion` (`id`, `titulo`, `descripcion`, `usuarioId`, `descargas`, `tipo_acceso`) VALUES
+(1, 'Matemáticas de Ingeniería', 'Cálculo diferencial, integral y vectores en 3D.', 10, 450, 'publico'),
+(2, 'Desarrollo Frontend Moderno', 'Dominando React Hooks y composición visual.', 4, 1200, 'publico'),
+(3, 'Ciberseguridad y Redes', 'Hacking ético, SQL avanzado y seguridad en redes.', 3, 890, 'publico'),
+(4, 'Idiomas y Cultura Global', 'Francés, Alemán, Italiano y cultura japonesa.', 6, 340, 'publico'),
+(5, 'Historia y Civilizaciones', 'Del Renacimiento a la Guerra Civil Española.', 18, 560, 'publico'),
+(6, 'Biología y Genética 2026', 'Edición genética CRISPR y Atlas Celular.', 10, 210, 'publico'),
+(7, 'Física y Química General', 'Leyes de Newton, óptica y nomenclatura de carbono.', 15, 670, 'publico'),
+(8, 'Economía y Finanzas', 'Oferta, demanda, contabilidad e interés compuesto.', 5, 430, 'publico'),
+(9, 'Arte y Composición Visual', 'Teoría del color, fotografía y diseño gráfico.', 11, 780, 'publico'),
+(10, 'IA y Neurociencia', 'Redes neuronales y plasticidad cerebral.', 1, 1500, 'publico'),
+(11, 'Programación con Python', 'Desde Hola Mundo hasta estructuras de datos.', 17, 920, 'publico'),
+(12, 'Tecnología Móvil y Apps', 'Desarrollo en Android y estrategias móviles.', 21, 310, 'publico'),
+(13, 'Producción Musical Pro', 'Mezcla, ecualización y teoría musical.', 11, 150, 'publico'),
+(14, 'Zoología y Ecosistemas', 'Fauna ibérica e invertebrados marinos.', 10, 85, 'publico'),
+(15, 'Sostenibilidad y Marketing', 'Economía circular y tendencias de mercado.', 22, 195, 'publico');
 -- INSERTS de coleccion_documento
 
 INSERT INTO `coleccion_documento` (`coleccionId`, `documentoId`) VALUES
