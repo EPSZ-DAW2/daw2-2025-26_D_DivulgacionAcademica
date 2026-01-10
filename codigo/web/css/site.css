@@ -2,6 +2,12 @@ main > .container {
     padding: 70px 15px 20px;
 }
 
+.footer {
+    background-color: #f5f5f5;
+    font-size: .9em;
+    height: 60px;
+}
+
 .footer > .container {
     padding-right: 15px;
     padding-left: 15px;
@@ -75,160 +81,4 @@ a.desc:after {
 
 .nav > li > form > button.logout:focus {
     outline: none;
-}
-
-
-/* --------------------------------------------------
-   Q&A - Preguntas y Respuestas
--------------------------------------------------- */
-
-.site-qa {
-	max-width: 1200px;
-	margin: 0 auto;
-}
-
-.qa-form {
-	background: #f8f9fa;
-	padding: 20px;
-	border-radius: 6px;
-	margin-bottom: 30px;
-}
-
-.qa-item {
-	padding: 15px;
-	margin-bottom: 20px;
-	border-left: 4px solid #6c757d;
-	background: #ffffff;
-}
-
-.qa-item.pending {
-	border-color: #ffc107;
-}
-
-.qa-item.answered {
-	border-color: #198754;
-}
-
-.qa-item.resolved {
-	border-color: #0d6efd; /* azul */
-}
-
-.qa-question {
-	font-weight: bold;
-	margin-bottom: 5px;
-}
-
-.qa-meta {
-	font-size: 0.9em;
-	color: #6c757d;
-}
-
-.qa-answer {
-	margin-top: 10px;
-	padding: 10px;
-	background: #f1f3f5;
-	border-radius: 4px;
-}
-
-.qa-teacher {
-	font-size: 0.9em;
-	color: #495057;
-	font-style: italic;
-}
-
-.qa-filters {
-	background-color: #f8f9fa;
-	padding: 15px;
-	border-radius: 6px;
-	margin-bottom: 25px;
-}
-
-.qa-filters label {
-	font-weight: 600;
-}
-
-.qa-summary {
-	/* display: flex; */
-	display: grid;
-	grid-template-columns: repeat(2, 1fr); /* 2 columnas */
-	gap: 15px; /* Espacio entre botones */
-	/* flex-wrap: wrap; */
-	justify-items: center; /* Centra los botones horizontalmente */
-	margin-bottom: 20px;
-	width: 100%;
-}
-
-/*.qa-summary-btn {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	font-weight: 600;
-}*/
-
-.qa-summary button {
-    background-color: transparent; /* Sin fondo */
-    color: #000;
-    border: none;                 /* Sin borde */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra suave */
-    padding: 20px 0; /* Más grande */
-    font-size: 1rem; /* Texto más grande */
-    border-radius: 8px;
-    cursor: pointer;
-    min-width: 220px; /* Ancho mínimo uniforme */
-    width: 100%;       /* ocupa toda la columna */
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-/* Hover suave */
-.qa-summary button:hover {
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    background-color: #f1f3f5; /* Fondo muy suave */
-}
-
-/* Número grande y negrita */
-.qa-summary .qa-number {
-	font-size: 2rem;
-	font-weight: bold;
-	margin-bottom: 8px; /* separación del texto */
-}
-
-/* Texto debajo normal */
-.qa-summary button div:last-child {
-	font-weight: normal;
-	font-size: 1rem;
-}
-
-/* Igualar altura de input y select en filtros Q&A */
-.qa-filters .form-control,
-.qa-filters .form-select {
-	height: 48px;
-	line-height: 1.5;
-}
-
-.qa-form button {
-    border: none; /* quita el borde */
-    background-color: #e9ecef; 
-    color: black;
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-}
-
-.qa-form button:hover {
-    background-color: #ced4da;
-}
-
-.pending-badge {
-	background-color: #ffc107; /* Amarillo */
-	color: #000;
-}
-
-.answered-badge {
-	background-color: #6c757d; /* Azul, igual que border-left */
-	color: #fff;
-}
-
-.resolved-badge {
-	background-color: #0d6efd; /* Azul */
-	color: #fff;
 }
