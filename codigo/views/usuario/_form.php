@@ -6,6 +6,9 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\Usuario $model */
 /** @var yii\widgets\ActiveForm $form */
+
+// 1. SECURITY CHECK: Am I an Admin?
+$isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin';
 ?>
 
 <div class="usuario-form">
@@ -25,21 +28,24 @@ use yii\widgets\ActiveForm;
 
         <div class="col-md-6">
             
-            <?= $form->field($model, 'rol')->dropDownList([
-                'alumno' => 'Alumno',
-                'gestor' => 'Gestor',
-                'empresa' => 'Empresa',
-                'admin' => 'Administrador',
-            ], ['prompt' => 'Seleccione un Rol...']) ?>
-
+            <?php if ($isAdmin): ?>
+                <div class="p-3 mb-3 bg-light border rounded">
+                    <strong>Zona de Administración</strong>
+                    <?= $form->field($model, 'rol')->dropDownList([
+                        'alumno' => 'Alumno',
+                        'gestor' => 'Gestor',
+                        'empresa' => 'Empresa',
+                        'admin' => 'Administrador',
+                    ], ['prompt' => 'Seleccione un Rol...']) ?>
+                </div>
+            <?php endif; ?>
             <div class="alert alert-warning p-2 mt-3">
-                <small>Dejar la contraseña en blanco para mantener la actual (solo en edición).</small>
+                <small>Dejar la contraseña en blanco para mantener la actual.</small>
             </div>
             
             <?php 
-            // Usamos 'password' tal cual está en tu base de datos.
-            // Nota: En un sistema real, idealmente usarías un campo virtual 'plainPassword' en el modelo.
-            echo $form->field($model, 'password')->passwordInput(['maxlength' => true, 'value' => '']); 
+            // CORRECCIÓN: Usamos 'password_plain' para que no falle la validación si está vacío
+            echo $form->field($model, 'password_plain')->passwordInput(['maxlength' => true])->label('Nueva Contraseña'); 
             ?>
 
         </div>

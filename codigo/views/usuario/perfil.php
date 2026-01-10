@@ -33,8 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <p><strong><i class="bi bi-calendar"></i> Miembro desde:</strong><br> <?= Yii::$app->formatter->asDate($model->fecha_registro) ?></p>
                     </div>
 
-                    <div class="d-grid gap-2 mt-4">
-                        <?= Html::a('Editar mis datos', ['update', 'id' => $model->id], ['class' => 'btn btn-outline-primary']) ?>
+                    <div class="text-center mt-3">
+                        <?= Html::a('Editar mis datos', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>

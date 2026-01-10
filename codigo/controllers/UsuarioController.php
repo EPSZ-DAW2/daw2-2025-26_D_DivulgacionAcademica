@@ -23,26 +23,19 @@ class UsuarioController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // --- REGLA 1: Acceso al PERFIL ---
-                    // Permitido para TODOS los usuarios logueados (Alumno, Empresa, Gestor, Admin)
+                    // REGLA 1: Acceso Básico (Perfil + Editarse a sí mismo)
                     [
-                        'actions' => ['perfil'], // La acción que creamos
+                        'actions' => ['perfil', 'update'], // Agregamos 'update' aquí
                         'allow' => true,
-                        'roles' => ['@'], // '@' significa cualquier usuario autenticado
+                        'roles' => ['@'],
                     ],
-
-                    // --- REGLA 2: Acceso ADMINISTRATIVO (CRUD) ---
-                    // Solo permitido para el rol 'admin'
+                    // REGLA 2: Admin Total (Puede hacer todo lo demás: crear, borrar, index)
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'create', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            // Verifica si el campo 'rol' en la DB es 'admin'
                             return Yii::$app->user->identity->rol === 'admin';
-                        },
-                        'denyCallback' => function ($rule, $action) {
-                            throw new \yii\web\ForbiddenHttpException('No tienes permiso para administrar usuarios.');
                         }
                     ],
                 ],
@@ -117,15 +110,36 @@ class UsuarioController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+        // --- SEGURIDAD: Verificar propiedad ---
+        $esAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin';
+        $esPropioPerfil = !Yii::$app->user->isGuest && Yii::$app->user->id == $id;
+
+        if (!$esAdmin && !$esPropioPerfil) {
+            throw new \yii\web\ForbiddenHttpException('No tienes permiso para editar este perfil.');
+        }
+        // --------------------------------------
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             
-            // Lógica extra: Si el admin escribió una nueva contraseña, la encriptamos y guardamos
+            // Si NO es admin, forzamos que el rol no cambie (seguridad extra)
+            if (!$esAdmin) {
+                $model->rol = $model->getOldAttribute('rol'); 
+                $model->nivel_vip = $model->getOldAttribute('nivel_vip');
+                $model->puntos_progreso = $model->getOldAttribute('puntos_progreso');
+                $model->estado_cuenta = $model->getOldAttribute('estado_cuenta');
+            }
+
+            // Encriptar contraseña si se cambió
             if (!empty($model->password_plain)) {
                 $model->setPassword($model->password_plain);
             }
             
             if ($model->save()) {
+                // Si es el propio usuario, volver a su perfil visual. Si es admin, a la vista técnica.
+                if (!$esAdmin) {
+                    return $this->redirect(['perfil']);
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }

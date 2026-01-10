@@ -2,14 +2,18 @@
 
 namespace app\models;
 
-class Usuario extends \yii\db\ActiveRecord
-  implements \yii\web\IdentityInterface
+use Yii;
+
+class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
   
-  //Atributos para almacenar el control de cambio de la posible contraseña.
+  // Atributos para almacenar el control de cambio de la posible contraseña.
   public $password1;
   public $password2;
   
+  // NUEVO: Necesario para el formulario _form.php (campo "Nueva Contraseña")
+  public $password_plain;
+
   //--->>>
   // Métodos necesarios para configurar el modelo respecto de la tabla a la que representa en la base de datos.
   //--->>>
@@ -19,12 +23,53 @@ class Usuario extends \yii\db\ActiveRecord
    */
   public static function tableName()
   {
-    //*** Sustituir "TABLA_USUARIOS" por el nombre correspondiente.
-    return '{{%usuario}}';
+    // Coincide con tu tabla MySQL
+    return 'usuario';
   }
   
-  //PENDIENTE: Método "rules".
-  //PENDIENTE: Método "attributeLabels".
+  /**
+   * REGLAS DE VALIDACIÓN (Implementación del PENDIENTE)
+   */
+  public function rules()
+  {
+      return [
+          // Campos obligatorios
+          [['username', 'nombre', 'email'], 'required'],
+
+          // Validaciones de tipo y longitud
+          [['username', 'nombre', 'email', 'password', 'rol'], 'string', 'max' => 255],
+          
+          // El email y username deben ser únicos
+          [['email'], 'unique'],
+          [['username'], 'unique'],
+          
+          // Formato email
+          ['email', 'email'],
+
+          // IMPORTANTE: Permitir que 'password_plain' pase la validación
+          [['password_plain', 'password1', 'password2'], 'safe'],
+          
+          // Otros campos
+          [['fecha_registro'], 'safe'],
+      ];
+  }
+
+  /**
+   * ETIQUETAS DE ATRIBUTOS (Implementación del PENDIENTE)
+   */
+  public function attributeLabels()
+  {
+      return [
+          'id' => 'ID',
+          'username' => 'Usuario',
+          'nombre' => 'Nombre Completo',
+          'email' => 'Correo Electrónico',
+          'password' => 'Contraseña',
+          'password_plain' => 'Nueva Contraseña',
+          'rol' => 'Rol',
+      ];
+  }
+  
   //PENDIENTE: Método "scenarios" (opcional).
   //PENDIENTE: Método "find".
   
@@ -41,12 +86,7 @@ class Usuario extends \yii\db\ActiveRecord
    */
   public static function findIdentity($id)
   {
-    $model= null;
-    
-    //Programar aquí la carga de un "Usuario" por su clave primaria.
-    if (!empty( $id)) $model= static::findOne( $id);
-    
-    return $model;
+    return static::findOne($id);
   }
   
   /**
@@ -54,24 +94,22 @@ class Usuario extends \yii\db\ActiveRecord
    */
   public static function findIdentityByAccessToken($token, $type = null)
   {
-    $model= null;
-    
-    //Programar aquí la carga de un "Usuario" por su "token" de acceso 
-    //el cual puede ser una variante de su clave primaria o similar para
-    //asegurar que sea único en la tabla correspondiente.
-    //*** Sustituir "CAMPO_TOKEN" por el nombre correspondiente.
-    // Nota: Como no usas tokens en tu DB actual, esto se deja nulo o comentado para evitar errores.
-    // if (!empty( $token)) $model= static::findOne( ['token'=>$token]);
-    
-    return $model;
+    return null; 
   }
   
+  /**
+   * Finds user by username (Necesario para el Login)
+   */
+  public static function findByUsername($username)
+  {
+      return static::findOne(['username' => $username]);
+  }
+
   /**
    * {@inheritdoc}
    */
   public function getId()
   {
-    //*** Sustituir "CAMPO_CLAVE_PRIMARIA" por el nombre correspondiente.
     return $this->id;
   }
   
@@ -80,10 +118,6 @@ class Usuario extends \yii\db\ActiveRecord
    */
   public function getAuthKey()
   {
-    //*** Sustituir "CAMPO_CLAVE_AUTORIZACION" por el nombre correspondiente
-    //o generar un resultado en función del campo "CAMPO_CLAVE_PRIMARIA" si
-    //no se implementa un servicio web que necesite mayor seguridad.
-    // Nota: Retornamos null porque tu tabla no tiene auth_key
     return null; 
   }
   
@@ -95,93 +129,78 @@ class Usuario extends \yii\db\ActiveRecord
     return $this->getAuthKey() === $authKey;
   }
   
-  //<<<---
-  // Métodos necesarios para cumplir con el "IdentityInterface".
-  //<<<---
-  
   /**
-   * Buscar un modelo "Usuario" por su nombre de usuario o el típico campo
-   * "login" o "email" o similar.
-   *
-   * Este método no pertenece al "IdentityInterface", se introduce para 
-   * delegar el sistema de "login" al "LoginForm".
-   *
-   * @param string $username
-   * @return static|null
-   */
-  public static function findByUsername($username)
-  {
-    $model= null;
-    
-    //Programar aquí la carga de un "Usuario" por su "login" de usuario o similar.
-    //*** Sustituir "CAMPO_LOGIN" por el nombre correspondiente.
-    //*** Descomentar y sustituir "CAMPO_ACTIVO" por el nombre correspondiente
-    //si se utiliza un posible sistema de usuario activo o inactivo.
-    //*** Descomentar y sustituir "CAMPO_BLOQUEADO" por el nombre correspondiente
-    //si se utiliza un posible sistema de usuario bloqueado o no bloqueado.
-    if (!empty( $username)) $model= static::findOne([
-        'username'=>$username
-      //, 'CAMPO_ACTIVO'=>true
-      //, 'CAMPO_BLOQUEADO'=>false
-    ]);
-    
-    return $model;
-  }
-
-  /**
-   * Validar la contraseña recibida con la que contiene la instancia actual
-   * del modelo de usuario.
-   *
-   * Este método no pertenece al "IdentityInterface", se introduce para 
-   * delegar el sistema de "login" al "LoginForm".
-   *
-   * @param string $password password a validar
-   * @return bool Si la clave es válida para el usuario actual.
+   * Validates password
+   * AHORA MISMO: Texto plano (INSEGURO - Solo para desarrollo)
    */
   public function validatePassword($password)
   {
-    //*** Sustituir "CAMPO_PASSWORD" por el nombre correspondiente.
-    //*** Si el "CAMPO_PASSWORD" está ofuscado-diversificado por alguna 
-    //función HASH se debe aplicar la función HASH a "$password" antes 
-    //de comparar, o si se usa el sistema "Security" de Yii2, se debe hacer
-    //la comparación usando sus funcionalidades.
-    return ($this->password === $password);
-    /*---*-/
-    $hashPassword= ALGUNA_FUNCION_HASH( $password);
-    return ($this->CAMPO_PASSWORD === $hashPassword);
-    //---*/
-    
+    return $this->password === $password;
   }
 
-    // Implementacion de las vistas restringidas de usuario
+  /**
+   * Sets password
+   * AHORA MISMO: Texto plano (INSEGURO - Solo para desarrollo)
+   */
+  public function setPassword($password)
+  {
+      $this->password = $password;
+  }
+  
+  //<<<---
+  // Métodos necesarios para cumplir con el "IdentityInterface".
+  //<<<---
 
-    // 1. Definicion de las constantes para los roles (es como creo que sale mejor hacerlo)
-    //    - Estos roles se pueden cambiar en cualquier momento de ser posible solo cambia el nombre depues del igual ya que las constantes es muy probable que de error
+
+  //--->>>
+  // Implementación de las vistas restringidas de usuario
+  //--->>>
+
+    // 1. Definicion de las constantes para los roles
     const ROL_ADMIN = 'admin';
     const ROL_GESTOR = 'gestor';
     const ROL_EMPRESA = 'empresa';
-    const ROL_ESTUDIANTE = 'estudiante';
+    const ROL_ESTUDIANTE = 'alumno'; // Ajustado a 'alumno' según tu DB
 
-    // 2. Implementacion de los metodos llamados por los controladores (los archivos dentro de /codigo/controllers/)
+    // 2. Implementacion de los metodos llamados por los controladores
 
     /**
-     * Usado por LogVisitaController
-     * Devuelve true si el usuario puede ver el backend/panel de administrador
+     * Devuelve true si el usuario puede ver el backend
      */
     public function puedeAccederBackend()
     {
-        // Por ejemplo solo el administrador y el gestor pueden ver el backend (panel de administrador)
         return $this->rol === self::ROL_ADMIN || $this->rol === self::ROL_GESTOR;
     }
 
     /**
-     * Usado por UsuarioController
-     * Devuelve true si el usuario puede crear, editar o borrar a otros usuarios
+     * Devuelve true si el usuario puede gestionar usuarios
      */
     public function puedeGestionarUsuarios()
     {
-        // Por ejemplo el administrador es el unico con este poder
         return $this->rol === self::ROL_ADMIN;
     }
-
 }
+
+/*
+==========================================================================
+CÓDIGO PARA FUTURO USO (ENCRIPTACIÓN REAL)
+Cuando quieras activar la seguridad, comenta las funciones validatePassword 
+y setPassword de arriba, y descomenta estas de abajo:
+
+Si esto lo he añadido yo (Juan), es que por ahora segun como tenemos
+gestionada la base de datos por ahora lo de hashear la contraseña como que
+no luego ya lo implementamos
+==========================================================================
+
+  public function validatePassword($password)
+  {
+      return Yii::$app->security->validatePassword($password, $this->password);
+  }
+
+  public function setPassword($password)
+  {
+      $this->password = Yii::$app->security->generatePasswordHash($password);
+  }
+
+==========================================================================
+*/
