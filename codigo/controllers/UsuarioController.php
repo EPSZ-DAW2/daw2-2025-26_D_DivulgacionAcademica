@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UsuarioController implements the CRUD actions for Usuario model.
+ * Esta fucnion implementa el CRUD de accciones para el modelo de usuarios.
  */
 class UsuarioController extends Controller
 {
@@ -23,16 +23,26 @@ class UsuarioController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
+                    // --- REGLA 1: Acceso al PERFIL ---
+                    // Permitido para TODOS los usuarios logueados (Alumno, Empresa, Gestor, Admin)
                     [
-                        // Regla: Permitir acceso a quien pueda gestionar usuarios (Admin + SuperAdmin)
+                        'actions' => ['perfil'], // La acción que creamos
                         'allow' => true,
-                        'roles' => ['@'], // Usuario autenticado
+                        'roles' => ['@'], // '@' significa cualquier usuario autenticado
+                    ],
+
+                    // --- REGLA 2: Acceso ADMINISTRATIVO (CRUD) ---
+                    // Solo permitido para el rol 'admin'
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            // Esto permite que entre el Admin Y TAMBIÉN el SuperAdmin.
-                            return Yii::$app->user->identity->puedeGestionarUsuarios();
+                            // Verifica si el campo 'rol' en la DB es 'admin'
+                            return Yii::$app->user->identity->rol === 'admin';
                         },
                         'denyCallback' => function ($rule, $action) {
-                            throw new \yii\web\ForbiddenHttpException('No tienes permiso para acceder a esta zona de administración.');
+                            throw new \yii\web\ForbiddenHttpException('No tienes permiso para administrar usuarios.');
                         }
                     ],
                 ],
@@ -154,4 +164,22 @@ class UsuarioController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    /**
+     * Muestra el perfil del usuario que ha iniciado sesion
+     */
+    public function actionPerfil()
+    {
+        // Primero comprueba que usuario ha iniciado sesion
+        $userId = Yii::$app->user->id;
+
+        // Despues lo encuentra en la base de datos
+        $model = $this->findModel($userId);
+
+        // Y depues manda a cargar la vista de perfil
+        return $this->render('perfil', [
+            'model' => $model,
+        ]);
+    }
+
 }

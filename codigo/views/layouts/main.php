@@ -49,23 +49,31 @@ AppAsset::register($this);
                   </a>
               </li>
           <?php endif; ?>
-              
         </ul>
       </nav>
       
-      <div class="header__auth">
+      <div class="header__auth" style="display: flex; align-items: center; gap: 15px;">
         <?php if (Yii::$app->user->isGuest): ?>
             <a href="<?= Url::to(['/site/login']) ?>" class="button button--secondary">Iniciar Sesión</a>
             <a href="<?= Url::to(['/site/signup']) ?>" class="button button--primary">Registrarse</a>
         <?php else: ?>
-            <span class="header__user-welcome">Hola, <?= Html::encode(Yii::$app->user->identity->username) ?></span>
+            <span class="header__user-welcome" style="margin-right: 5px; color: #666;">
+                Hola, <?= Html::encode(Yii::$app->user->identity->username) ?>
+            </span>
             
-            <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
+            <a href="<?= Url::to(['/usuario/perfil']) ?>" class="nav__link">
+                Mi Perfil
+            </a>
+
+            <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline', 'style' => 'margin: 0;']) ?>
                 <?= Html::submitButton(
                     'Cerrar Sesión',
-                    ['class' => 'button button--secondary button--small']
+                    [
+                        'class' => 'button', 
+                        'style' => 'background-color: #dc2626; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500;'
+                    ]
                 ) ?>
-            <?= Html::endForm() ?>
+            
         <?php endif; ?>
       </div>
     </div>
