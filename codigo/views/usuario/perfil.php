@@ -56,14 +56,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         <thead>
                             <tr>
                                 <th>Fecha</th>
-                                <th>Acción</th>
-                                <th>IP</th>
-                            </tr>
+                                <th>Acción</th> <th>IP</th>
+                                <th>User Agent</th> </tr>
                         </thead>
                         <tbody>
                             <?php 
-                            // This uses the UserLog table we created in previous steps
-                            // If you haven't created UserLog yet, this might error.
                             if (class_exists('\app\models\UserLog')):
                                 $logs = \app\models\UserLog::find()
                                     ->where(['user_id' => $model->id])
@@ -75,15 +72,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                     foreach ($logs as $log): ?>
                                     <tr>
                                         <td><?= Yii::$app->formatter->asRelativeTime($log->created_at) ?></td>
-                                        <td><?= Html::encode($log->action) ?></td>
+                                        <td><strong><?= Html::encode($log->action) ?></strong></td>
                                         <td><small class="text-muted"><?= Html::encode($log->ip_address) ?></small></td>
+                                        
+                                        <td title="<?= Html::encode($log->user_agent) ?>" style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            <small class="text-muted"><?= Html::encode($log->user_agent) ?></small>
+                                        </td>
                                     </tr>
                                     <?php endforeach; 
                                 else: ?>
-                                    <tr><td colspan="3" class="text-center text-muted p-3">No hay actividad reciente.</td></tr>
+                                    <tr><td colspan="4" class="text-center text-muted p-3">No hay actividad reciente.</td></tr>
                                 <?php endif; 
                             else: ?>
-                                <tr><td colspan="3" class="text-center text-muted">Tabla de logs no configurada.</td></tr>
+                                <tr><td colspan="4" class="text-center text-muted">Tabla de logs no configurada.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
