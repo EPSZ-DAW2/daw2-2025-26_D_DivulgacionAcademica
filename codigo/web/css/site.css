@@ -82,28 +82,133 @@ a.desc:after {
 -------------------------------------------------- */
 
 .site-qa {
-	max-width: 900px;
+	max-width: 1200px;
 	margin: 0 auto;
 }
 
-.site-qa h1 {
-	margin-bottom: 20px;
+.qa-form {
+	background: #f8f9fa;
+	padding: 20px;
+	border-radius: 6px;
+	margin-bottom: 30px;
 }
 
 .qa-item {
-	margin-bottom: 25px;
-	padding: 15px 20px;
-	background-color: #f9f9f9;
-	border-left: 4px solid #337ab7;
+	padding: 15px;
+	margin-bottom: 20px;
+	border-left: 4px solid #6c757d;
+	background: #ffffff;
+}
+
+.qa-item.pending {
+	border-color: #ffc107;
+}
+
+.qa-item.answered {
+	border-color: #198754;
 }
 
 .qa-question {
 	font-weight: bold;
-	color: #212529;
-	margin-bottom: 8px;
+	margin-bottom: 5px;
+}
+
+.qa-meta {
+	font-size: 0.9em;
+	color: #6c757d;
 }
 
 .qa-answer {
-	color: #555;
+	margin-top: 10px;
+	padding: 10px;
+	background: #f1f3f5;
+	border-radius: 4px;
 }
 
+.qa-teacher {
+	font-size: 0.9em;
+	color: #495057;
+	font-style: italic;
+}
+
+.qa-filters {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 6px;
+	margin-bottom: 25px;
+}
+
+.qa-filters label {
+	font-weight: 600;
+}
+
+.qa-summary {
+	/* display: flex; */
+	display: grid;
+	grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+	gap: 15px; /* Espacio entre botones */
+	/* flex-wrap: wrap; */
+	justify-items: center; /* Centra los botones horizontalmente */
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+/*.qa-summary-btn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+}*/
+
+.qa-summary button {
+    background-color: transparent; /* Sin fondo */
+    color: #000;
+    border: none;                 /* Sin borde */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra suave */
+    padding: 20px 0; /* Más grande */
+    font-size: 1rem; /* Texto más grande */
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 220px; /* Ancho mínimo uniforme */
+    width: 100%;       /* ocupa toda la columna */
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+/* Hover suave */
+.qa-summary button:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    background-color: #f1f3f5; /* Fondo muy suave */
+}
+
+/* Número grande y negrita */
+.qa-summary .qa-number {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 8px; /* separación del texto */
+}
+
+/* Texto debajo normal */
+.qa-summary button div:last-child {
+	font-weight: normal;
+	font-size: 1rem;
+}
+
+/* Igualar altura de input y select en filtros Q&A */
+.qa-filters .form-control,
+.qa-filters .form-select {
+	height: 48px;
+	line-height: 1.5;
+}
+
+.qa-form button {
+    border: none; /* quita el borde */
+    background-color: #e9ecef; 
+    color: black;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.qa-form button:hover {
+    background-color: #ced4da;
+}
