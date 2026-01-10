@@ -77,6 +77,7 @@ a.desc:after {
     outline: none;
 }
 
+
 /* --------------------------------------------------
    Q&A - Preguntas y Respuestas
 -------------------------------------------------- */
@@ -106,6 +107,10 @@ a.desc:after {
 
 .qa-item.answered {
 	border-color: #198754;
+}
+
+.qa-item.resolved {
+	border-color: #0d6efd; /* azul */
 }
 
 .qa-question {
@@ -211,4 +216,19 @@ a.desc:after {
 
 .qa-form button:hover {
     background-color: #ced4da;
+}
+
+.pending-badge {
+	background-color: #ffc107; /* Amarillo */
+	color: #000;
+}
+
+.answered-badge {
+	background-color: #6c757d; /* Azul, igual que border-left */
+	color: #fff;
+}
+
+.resolved-badge {
+	background-color: #0d6efd; /* Azul */
+	color: #fff;
 }

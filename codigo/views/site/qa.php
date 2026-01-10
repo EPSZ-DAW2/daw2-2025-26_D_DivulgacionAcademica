@@ -10,20 +10,11 @@ $this->title = 'Preguntas y Respuestas';
     
     <!-- FILTROS Y BÚSQUEDA -->
     <div class="qa-filters">
-
         <form class="row g-3 align-items-end">
-
-            <!-- BUSCAR -->
             <div class="col-md-4">
                 <label class="form-label">Buscar duda</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Buscar por texto..."
-                >
+                <input type="text" class="form-control" placeholder="Buscar por texto...">
             </div>
-
-            <!-- CATEGORÍA -->
             <div class="col-md-4">
                 <label class="form-label">Categoría</label>
                 <select class="form-select">
@@ -34,45 +25,45 @@ $this->title = 'Preguntas y Respuestas';
                     <option>Sistemas</option>
                 </select>
             </div>
-
-            <!-- ESTADO -->
             <div class="col-md-4">
                 <label class="form-label">Estado</label>
                 <select class="form-select">
                     <option selected>Todos</option>
-                    <option>Sin responder</option>
-                    <option>Respondida</option>
-                    <option>Resuelta</option>
+                    <option value="pendiente">Sin responder</option>
+                    <option value="respondida">Respondida</option>
+                    <option value="resuelta">Resuelta</option>
                 </select>
             </div>
-
         </form>
-
     </div>
     
     <!-- RESUMEN DE DUDAS -->
     <div class="qa-summary">
-
+        <?php
+        $total = count($preguntas);
+        $sinResponder = count(array_filter($preguntas, fn($p) => empty($p->respuestas)));
+        $respondidas = count(array_filter($preguntas, fn($p) => !empty($p->respuestas) && $p->estado == 'respondida'));
+        $resueltas = count(array_filter($preguntas, fn($p) => $p->estado == 'resuelta'));
+        ?>
         <button class="qa-summary-btn" disabled>
-            <div class="qa-number">12</div>
+            <div class="qa-number"><?= $total ?></div>
             <div>Total</div>
         </button>
 
         <button class="qa-summary-btn" disabled>
-            <div class="qa-number">5</div>
+            <div class="qa-number"><?= $sinResponder ?></div>
             <div>Sin responder</div>
         </button>
 
         <button class="qa-summary-btn" disabled>
-            <div class="qa-number">4</div>
+            <div class="qa-number"><?= $respondidas ?></div>
             <div>Respondidas</div>
         </button>
 
         <button class="qa-summary-btn" disabled>
-            <div class="qa-number">3</div>
+            <div class="qa-number"><?= $resueltas ?></div>
             <div>Resueltas</div>
         </button>
-
     </div>
 
     <hr>
@@ -80,20 +71,12 @@ $this->title = 'Preguntas y Respuestas';
     <!-- FORMULARIO ALUMNO -->
     <div class="qa-form">
         <h3>Enviar una pregunta</h3>
-
         <form>
             <div class="form-group mb-3">
                 <label>Pregunta</label>
                 <textarea class="form-control" rows="3" placeholder="Escribe tu pregunta..."></textarea>
             </div>
-
-            <button class="qa-summary-btn" disabled>
-                Enviar pregunta
-            </button>
-
-            <p class="text-muted mt-2">
-                * Funcionalidad no implementada
-            </p>
+            <button class="qa-summary-btn" disabled>Enviar pregunta</button>
         </form>
     </div>
 
@@ -101,38 +84,53 @@ $this->title = 'Preguntas y Respuestas';
 
     <!-- LISTADO Q&A -->
     <div class="qa-list">
-
         <h3>Preguntas recientes</h3>
 
-        <!-- PREGUNTA SIN RESPUESTA -->
-        <div class="qa-item pending">
-            <p class="qa-question">
-                ❓ ¿Cuándo se publican las notas finales?
-            </p>
-            <p class="qa-meta">
-                Alumno · 12/01/2026 · <span class="badge bg-warning">Pendiente</span>
-            </p>
-        </div>
+        <?php foreach ($preguntas as $pregunta): ?>
+            <?php
+                $estadoClass = '';
+                $estadoLabel = '';
+                $badgeClass = '';
 
-        <!-- PREGUNTA RESPONDIDA -->
-        <div class="qa-item answered">
-            <p class="qa-question">
-                ❓ ¿Se puede entregar la práctica fuera de plazo?
-            </p>
-            <p class="qa-meta">
-                Alumno · 10/01/2026 · <span class="badge bg-success">Respondida</span>
-            </p>
+                if(empty($pregunta->respuestas)) {
+                    // Sin respuesta
+                    $estadoClass = 'pending';
+                    $estadoLabel = 'No respondida';
+                    $badgeClass = 'bg-warning';
+                } elseif($pregunta->estado == 'respondida') {
+                    $estadoClass = 'answered';
+                    $estadoLabel = 'Respondida';
+                    $badgeClass = 'bg-success';
+                } elseif($pregunta->estado == 'resuelta') {
+                    $estadoClass = 'resolved';
+                    $estadoLabel = 'Resuelta';
+                    $badgeClass = 'bg-primary';
+                }
+            ?>
 
-            <div class="qa-answer">
-                <p>
-                    ✔ Sí, con una penalización del 20% si se entrega dentro de la semana siguiente.
+            <div class="qa-item <?= $estadoClass ?>">
+                <p class="qa-question">❓ <?= Html::encode($pregunta->titulo) ?></p>
+                <p class="qa-meta">
+                    <?= Html::encode($pregunta->usuario->username ?? 'Alumno') ?> · 
+                    <?= Yii::$app->formatter->asDate($pregunta->fecha_creacion) ?> · 
+                    <span class="badge <?= $badgeClass ?>"><?= $estadoLabel ?></span>
                 </p>
-                <p class="qa-teacher">
-                    Profesor: Juan Pérez
-                </p>
+
+                <p class="qa-description"><?= Html::encode($pregunta->descripcion) ?></p>
+
+                <?php if(!empty($pregunta->respuestas)): ?>
+                    <?php foreach($pregunta->respuestas as $respuesta): ?>
+                        <div class="qa-answer">
+                            <p>✔ <?= Html::encode($respuesta->contenido) ?></p>
+                            <p class="qa-teacher">
+                                Profesor: <?= Html::encode($respuesta->usuario->username ?? 'Profesor') ?>
+                            </p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
-        </div>
 
+        <?php endforeach; ?>
     </div>
 
 </div>
