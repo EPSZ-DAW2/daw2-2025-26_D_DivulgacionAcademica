@@ -54,8 +54,8 @@ AppAsset::register($this);
       
       <div class="header__auth" style="display: flex; align-items: center; gap: 15px;">
         <?php if (Yii::$app->user->isGuest): ?>
-            <a href="<?= Url::to(['/site/login']) ?>" class="button button--secondary">Iniciar Sesión</a>
-            <a href="<?= Url::to(['/site/signup']) ?>" class="button button--primary">Registrarse</a>
+            <a href="<?= Url::to(['/site/login']) ?>" class="nav__link">Iniciar sesión</a>
+            <a href="<?= Url::to(['/site/register']) ?>" class="btn btn--primary btn--sm">Registrarse</a>
         <?php else: ?>
             <span class="header__user-welcome" style="margin-right: 5px; color: #666;">
                 Hola, <?= Html::encode(Yii::$app->user->identity->username) ?>
