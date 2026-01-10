@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 
 // 1. SECURITY CHECK: Am I an Admin?
 $isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin';
+$isNew = $model->isNewRecord;
 ?>
 
 <div class="usuario-form">
@@ -39,20 +40,33 @@ $isAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admi
                     ], ['prompt' => 'Seleccione un Rol...']) ?>
                 </div>
             <?php endif; ?>
-            <div class="alert alert-warning p-2 mt-3">
-                <small>Dejar la contraseña en blanco para mantener la actual.</small>
+            
+            <div class="alert alert-info p-2 mt-3">
+                <small>Escribe aquí solo si deseas cambiar tu contraseña.</small>
             </div>
             
-            <?php 
-            // CORRECCIÓN: Usamos 'password_plain' para que no falle la validación si está vacío
-            echo $form->field($model, 'password_plain')->passwordInput(['maxlength' => true])->label('Nueva Contraseña'); 
-            ?>
+            <?= $form->field($model, 'password_plain')->passwordInput(['maxlength' => true, 'placeholder' => 'Nueva contraseña...']) ?>
 
         </div>
     </div>
+    
+    <?php if (!$isNew): ?>
+        <hr>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6 p-4" style="background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px;">
+                <h5 class="text-center text-warning-emphasis">Confirmar cambios</h5>
+                <p class="text-center small">Introduce tu contraseña actual para guardar.</p>
+                
+                <?= $form->field($model, 'current_password')->passwordInput([
+                    'maxlength' => true,
+                    'placeholder' => 'Tu contraseña actual...'
+                ])->label(false) ?>
+            </div>
+        </div>
+    <?php endif; ?>
 
-    <div class="form-group mt-4">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+    <div class="form-group mt-4 text-center">
+        <?= Html::submitButton('Guardar Cambios', ['class' => 'btn btn-success px-5']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

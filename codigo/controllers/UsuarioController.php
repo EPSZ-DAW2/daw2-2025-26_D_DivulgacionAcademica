@@ -8,9 +8,10 @@ use app\models\UsuarioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl; // Necesario para el control de acceso
 
 /**
- * Esta fucnion implementa el CRUD de accciones para el modelo de usuarios.
+ * UsuarioController implements the CRUD actions for Usuario model.
  */
 class UsuarioController extends Controller
 {
@@ -21,13 +22,13 @@ class UsuarioController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::class,
+                'class' => AccessControl::class,
                 'rules' => [
                     // REGLA 1: Acceso Básico (Perfil + Editarse a sí mismo)
                     [
-                        'actions' => ['perfil', 'update'], // Agregamos 'update' aquí
+                        'actions' => ['perfil', 'update'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['@'], // Usuarios autenticados
                     ],
                     // REGLA 2: Admin Total (Puede hacer todo lo demás: crear, borrar, index)
                     [
@@ -35,13 +36,14 @@ class UsuarioController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
+                            // Verifica si el rol es 'admin' usando el modelo Identity
                             return Yii::$app->user->identity->rol === 'admin';
                         }
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => \yii\filters\VerbFilter::class,
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -51,8 +53,7 @@ class UsuarioController extends Controller
 
     /**
      * Lists all Usuario models.
-     *
-     * @return string
+     * @return mixed
      */
     public function actionIndex()
     {
@@ -68,7 +69,7 @@ class UsuarioController extends Controller
     /**
      * Displays a single Usuario model.
      * @param int $id ID
-     * @return string
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
@@ -79,17 +80,44 @@ class UsuarioController extends Controller
     }
 
     /**
+     * Muestra el perfil del usuario logueado.
+     * (Esta acción fue añadida manualmente)
+     */
+    public function actionPerfil()
+    {
+        // 1. Obtener ID del usuario actual
+        $userId = Yii::$app->user->id;
+        
+        // 2. Buscar modelo
+        $model = $this->findModel($userId);
+
+        // 3. Renderizar vista
+        return $this->render('perfil', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
      * Creates a new Usuario model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return mixed
      */
     public function actionCreate()
     {
         $model = new Usuario();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                
+                // Lógica de contraseña para CREAR:
+                // Si viene 'password_plain', la seteamos.
+                if (!empty($model->password_plain)) {
+                    $model->setPassword($model->password_plain);
+                }
+
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -101,59 +129,10 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Updates an existing Usuario model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        
-        // --- SEGURIDAD: Verificar propiedad ---
-        $esAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin';
-        $esPropioPerfil = !Yii::$app->user->isGuest && Yii::$app->user->id == $id;
-
-        if (!$esAdmin && !$esPropioPerfil) {
-            throw new \yii\web\ForbiddenHttpException('No tienes permiso para editar este perfil.');
-        }
-        // --------------------------------------
-
-        if ($this->request->isPost && $model->load($this->request->post())) {
-            
-            // Si NO es admin, forzamos que el rol no cambie (seguridad extra)
-            if (!$esAdmin) {
-                $model->rol = $model->getOldAttribute('rol'); 
-                $model->nivel_vip = $model->getOldAttribute('nivel_vip');
-                $model->puntos_progreso = $model->getOldAttribute('puntos_progreso');
-                $model->estado_cuenta = $model->getOldAttribute('estado_cuenta');
-            }
-
-            // Encriptar contraseña si se cambió
-            if (!empty($model->password_plain)) {
-                $model->setPassword($model->password_plain);
-            }
-            
-            if ($model->save()) {
-                // Si es el propio usuario, volver a su perfil visual. Si es admin, a la vista técnica.
-                if (!$esAdmin) {
-                    return $this->redirect(['perfil']);
-                }
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Deletes an existing Usuario model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
@@ -172,28 +151,64 @@ class UsuarioController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Usuario::findOne(['id' => $id])) !== null) {
+        if (($model = Usuario::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+
     /**
-     * Muestra el perfil del usuario que ha iniciado sesion
+     * Updates an existing Usuario model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param int $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionPerfil()
+    public function actionUpdate($id)
     {
-        // Primero comprueba que usuario ha iniciado sesion
-        $userId = Yii::$app->user->id;
+        $model = $this->findModel($id);
+        
+        // 1. Activamos escenario 'update' para exigir 'current_password'
+        $model->scenario = 'update'; 
 
-        // Despues lo encuentra en la base de datos
-        $model = $this->findModel($userId);
+        $esAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin';
+        $esPropioPerfil = !Yii::$app->user->isGuest && Yii::$app->user->id == $id;
 
-        // Y depues manda a cargar la vista de perfil
-        return $this->render('perfil', [
+        if (!$esAdmin && !$esPropioPerfil) {
+            throw new \yii\web\ForbiddenHttpException('No tienes permiso para editar este perfil.');
+        }
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            
+            // Si NO es admin, restauramos el rol original
+            if (!$esAdmin) {
+                $model->rol = $model->getOldAttribute('rol'); 
+            }
+
+            // Si hay nueva contraseña, la seteamos
+            if (!empty($model->password_plain)) {
+                $model->setPassword($model->password_plain);
+            }
+
+            // Guardamos (esto validará current_password automáticamente)
+            if ($model->save()) {
+                
+                // 2. FIX LOGOUT: Refrescamos la sesión si es el propio usuario
+                if ($esPropioPerfil) {
+                    Yii::$app->user->login($model, 3600 * 24 * 30); 
+                    return $this->redirect(['perfil']);
+                }
+                
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
+
+        return $this->render('update', [
             'model' => $model,
         ]);
     }
+
 
 }

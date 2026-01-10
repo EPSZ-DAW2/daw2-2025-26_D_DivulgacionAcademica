@@ -11,8 +11,11 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
   public $password1;
   public $password2;
   
-  // NUEVO: Necesario para el formulario _form.php (campo "Nueva Contraseña")
+  // Para la nueva contraseña (opcional)
   public $password_plain;
+
+  // Para confirmar cambios (obligatorio al editar)
+  public $current_password;
 
   //--->>>
   // Métodos necesarios para configurar el modelo respecto de la tabla a la que representa en la base de datos.
@@ -27,29 +30,30 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     return 'usuario';
   }
   
-  /**
-   * REGLAS DE VALIDACIÓN (Implementación del PENDIENTE)
+   /**
+   * REGLAS DE VALIDACIÓN (CRUCIAL PARA QUE SE GUARDEN LOS DATOS)
    */
   public function rules()
   {
       return [
-          // Campos obligatorios
+          // 1. Campos obligatorios básicos
           [['username', 'nombre', 'email'], 'required'],
 
-          // Validaciones de tipo y longitud
+          // 2. Tipos de datos
           [['username', 'nombre', 'email', 'password', 'rol'], 'string', 'max' => 255],
           
-          // El email y username deben ser únicos
+          // 3. Unicidad
           [['email'], 'unique'],
           [['username'], 'unique'],
-          
-          // Formato email
           ['email', 'email'],
 
-          // IMPORTANTE: Permitir que 'password_plain' pase la validación
+          // 4. Campos seguros (permitir que el form los envíe)
           [['password_plain', 'password1', 'password2'], 'safe'],
+
+          // 5. REGLA: Contraseña actual obligatoria solo al actualizar (update)
+          [['current_password'], 'required', 'on' => 'update'],
+          [['current_password'], 'validateCurrentPassword'],
           
-          // Otros campos
           [['fecha_registro'], 'safe'],
       ];
   }
@@ -179,6 +183,21 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->rol === self::ROL_ADMIN;
     }
+
+   /**
+   * Validador personalizado para la contraseña actual
+   */
+   public function validateCurrentPassword($attribute, $params)
+   {
+       if (!$this->hasErrors()) {
+           // Verificación en texto plano (como pediste)
+           if ($this->password !== $this->current_password) {
+               $this->addError($attribute, 'La contraseña actual es incorrecta.');
+           }
+       }
+   }
+
+
 }
 
 /*
