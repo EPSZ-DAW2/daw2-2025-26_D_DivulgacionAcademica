@@ -969,7 +969,6 @@ ALTER TABLE `servicio`
 --
 
 -- TABLA: coleccion
-DROP TABLE IF EXISTS `coleccion`;
 CREATE TABLE `coleccion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `titulo` varchar(255) NOT NULL,
