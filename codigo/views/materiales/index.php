@@ -62,6 +62,7 @@ if (!is_array($catsSel)) $catsSel = [$catsSel];
                     $isChecked = in_array($cat->id, $catsSel);
                     $icon = '📂'; 
                     if (stripos($cat->nombre, 'Programación') !== false) $icon = '💻';
+                    elseif (stripos($cat->nombre, 'Arte y Humanidades') !== false) $icon = '🖌️';
                     elseif (stripos($cat->nombre, 'Matemáticas') !== false) $icon = '📐';
                     elseif (stripos($cat->nombre, 'Química') !== false) $icon = '🧪';
                     elseif (stripos($cat->nombre, 'Idiomas') !== false) $icon = '🌍';
@@ -69,7 +70,7 @@ if (!is_array($catsSel)) $catsSel = [$catsSel];
                     elseif (stripos($cat->nombre, 'Física') !== false) $icon = '⚛️';
                     elseif (stripos($cat->nombre, 'Economía') !== false) $icon = '📊';
                     elseif (stripos($cat->nombre, 'Biología') !== false) $icon = '🧠';
-                    elseif (stripos($cat->nombre, 'Artes y Humanidades') !== false) $icon = '🖌️';
+                    
                 ?>
                 <div class="form-checkbox">
                     <input type="checkbox" id="cat-<?= $cat->id ?>" name="category[]" value="<?= $cat->id ?>" <?= $isChecked ? 'checked' : '' ?>>

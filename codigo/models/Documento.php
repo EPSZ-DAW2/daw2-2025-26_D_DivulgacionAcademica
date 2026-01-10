@@ -7,7 +7,6 @@ use yii\db\ActiveRecord;
 
 class Documento extends ActiveRecord
 {
-    // Variable virtual para la subida del archivo (no se guarda en BD)
     public $archivoFile;
 
     public static function tableName()
@@ -19,13 +18,16 @@ class Documento extends ActiveRecord
     {
         return [
             [['titulo', 'materiaId', 'institucionId'], 'required'],
-            [['materiaId', 'autorId', 'institucionId'], 'integer'],
+            [['materiaId', 'autorId', 'institucionId', 'usuario_subida_id'], 'integer'],
             [['tipo_acceso'], 'string'],
-            // Para el nombre del archivo 
             [['archivo_url'], 'string', 'max' => 255],
             
-            // Para subir solo PDFs, obligatorio al crear
-            [['archivoFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf', 'maxSize' => 1024 * 1024 * 10], // Máx 10MB
+            // --- CAMBIO AQUÍ: AÑADIMOS EXTENSIONES Y SUBIMOS TAMAÑO ---
+            [['archivoFile'], 'file', 
+                'skipOnEmpty' => false, 
+                'extensions' => 'pdf, doc, docx, xls, xlsx, ppt, pptx, mp4', // Word, Excel, PowerPoint, Video
+                'maxSize' => 1024 * 1024 * 50 // Límite subido a 50MB para los vídeos
+            ],
         ];
     }
 
@@ -34,19 +36,19 @@ class Documento extends ActiveRecord
         return [
             'titulo' => 'Título del Documento',
             'materiaId' => 'Asignatura / Materia',
-            'autorId' => 'Autor/a (Profesor/a)',
+            'autorId' => 'Autor Original (Profesor)',
             'institucionId' => 'Institución',
             'tipo_acceso' => 'Visibilidad',
-            'archivoFile' => 'Subir PDF',
+            'archivoFile' => 'Archivo',
         ];
     }
 
-    // Relaciones
+    // --- Relaciones ---
     public function getMateria() { return $this->hasOne(Materia::class, ['id' => 'materiaId']); }
     public function getAutor() { return $this->hasOne(Personal::class, ['id' => 'autorId']); }
     public function getInstitucion() { return $this->hasOne(Institucion::class, ['id' => 'institucionId']); }
     
-    // Funciones de valoración y comentarios
+    // Funciones extra
     public function getComentarios() { return $this->hasMany(DocumentoComentario::class, ['documentoId' => 'id'])->orderBy(['fecha' => SORT_DESC]); }
     public function getValoraciones() { return $this->hasMany(DocumentoValoracion::class, ['documentoId' => 'id']); }
     public function getRatingPromedio() {

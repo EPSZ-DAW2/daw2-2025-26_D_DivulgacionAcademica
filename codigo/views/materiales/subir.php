@@ -17,10 +17,10 @@ $this->title = 'Subir Nuevo Material';
                     <h2 class="text-center mb-4">📤 Subir Documento</h2>
                     
                     <?php $form = ActiveForm::begin([
-                        'options' => ['enctype' => 'multipart/form-data'] // Para suibir archivos
+                        'options' => ['enctype' => 'multipart/form-data']
                     ]); ?>
 
-                    <?= $form->field($model, 'titulo')->textInput(['placeholder' => 'Ej: Apuntes de Física Cuántica', 'class' => 'form-control mb-3']) ?>
+                    <?= $form->field($model, 'titulo')->textInput(['placeholder' => 'Ej: Resumen de Historia', 'class' => 'form-control mb-3']) ?>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -35,13 +35,16 @@ $this->title = 'Subir Nuevo Material';
                     </div>
 
                     <?= $form->field($model, 'institucionId')->dropDownList($instituciones, ['prompt' => 'Selecciona Institución...', 'class' => 'form-select mb-3']) ?>
-
-                    <?= $form->field($model, 'autorId')->dropDownList($autores, ['prompt' => 'Selecciona Autor/Profesor...', 'class' => 'form-select mb-3']) ?>
+                    
+                    <?= $form->field($model, 'autorId')->dropDownList($autores, ['prompt' => 'Selecciona Autor/Profesor (Opcional)...', 'class' => 'form-select mb-3']) ?>
 
                     <div class="mb-4 p-3 bg-light rounded border border-dashed text-center">
-                        <label class="form-label fw-bold d-block">Selecciona el PDF</label>
+                        <label class="form-label fw-bold d-block">Selecciona el archivo</label>
                         <?= $form->field($model, 'archivoFile')->fileInput(['class' => 'form-control'])->label(false) ?>
-                        <small class="text-muted">Solo formato .pdf (Máx 10MB)</small>
+                        <small class="text-muted d-block mt-2">
+                            Formatos: <strong>PDF, Word, Excel, PowerPoint, MP4</strong>
+                        </small>
+                        <small class="text-muted">Máximo 50 MB</small>
                     </div>
 
                     <div class="d-grid gap-2">

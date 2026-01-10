@@ -11,11 +11,25 @@ $this->title = $model->titulo;
 $rating = $model->getRatingPromedio(); 
 $votos = $model->getTotalVotos();
 
-// --- LÓGICA PARA DATOS DEL ARCHIVO REAL ---
+// --- LÓGICA DE ARCHIVO ---
 $rutaArchivo = 'uploads/' . $model->archivo_url;
 $existeArchivo = file_exists($rutaArchivo);
 $tamano = $existeArchivo ? round(filesize($rutaArchivo) / 1024 / 1024, 2) . ' MB' : 'Desconocido';
 $fechaSubida = $existeArchivo ? date('d/m/Y', filemtime($rutaArchivo)) : date('d/m/Y');
+
+// Detectar extensión para iconos y texto
+$ext = strtolower(pathinfo($model->archivo_url, PATHINFO_EXTENSION));
+$tipoInfo = [
+    'pdf' => ['icon' => '📄', 'label' => 'PDF (Documento)'],
+    'doc' => ['icon' => '📝', 'label' => 'Word (Documento)'],
+    'docx' => ['icon' => '📝', 'label' => 'Word (Documento)'],
+    'xls' => ['icon' => '📊', 'label' => 'Excel (Hoja de cálculo)'],
+    'xlsx' => ['icon' => '📊', 'label' => 'Excel (Hoja de cálculo)'],
+    'ppt' => ['icon' => '📽️', 'label' => 'PowerPoint (Presentación)'],
+    'pptx' => ['icon' => '📽️', 'label' => 'PowerPoint (Presentación)'],
+    'mp4' => ['icon' => '🎥', 'label' => 'Video MP4'],
+];
+$info = $tipoInfo[$ext] ?? ['icon' => '📁', 'label' => strtoupper($ext) . ' (Archivo)'];
 ?>
 
 <div class="container py-5">
@@ -72,15 +86,18 @@ $fechaSubida = $existeArchivo ? date('d/m/Y', filemtime($rutaArchivo)) : date('d
                     </div>
                     
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-start mt-4">
+                        
                         <?php if ($existeArchivo): ?>
-                            <a href="<?= Url::to('@web/uploads/' . $model->archivo_url) ?>" class="btn btn-primary btn-lg px-5" target="_blank" download>
-                                ⬇️ Descargar Archivo (<?= $tamano ?>)
+                            <a href="<?= Url::to('@web/uploads/' . $model->archivo_url) ?>" class="btn btn-primary btn-lg px-4" target="_blank" download>
+                                ⬇️ Descargar <?= strtoupper($ext) ?> (<?= $tamano ?>)
                             </a>
                         <?php else: ?>
-                            <button class="btn btn-secondary btn-lg px-5" disabled>⚠️ Archivo no disponible</button>
+                            <button class="btn btn-secondary btn-lg px-4" disabled>⚠️ No disponible</button>
                         <?php endif; ?>
                         
-                        <a href="<?= Url::to(['materiales/index']) ?>" class="btn btn-link text-muted px-4">Volver al listado</a>
+                        <a href="#" class="btn btn-outline-primary btn-lg px-4">📚 Añadir a colección</a>
+                        
+                        <a href="<?= Url::to(['materiales/index']) ?>" class="btn btn-link text-muted px-4 ms-auto">Volver al listado</a>
                     </div>
                 </div>
             </div>
@@ -94,8 +111,14 @@ $fechaSubida = $existeArchivo ? date('d/m/Y', filemtime($rutaArchivo)) : date('d
                             <div class="row">
                                 <div class="col-6">
                                     <ul class="list-unstyled mb-0">
-                                        <li class="mb-2"><span class="text-muted">Fichero:</span> <span class="font-monospace text-break"><?= Html::encode($model->archivo_url) ?></span></li>
-                                        <li><span class="text-muted">Formato:</span> PDF</li>
+                                        <li class="mb-2">
+                                            <span class="text-muted">Fichero:</span> 
+                                            <span class="font-monospace text-break"><?= Html::encode($model->archivo_url) ?></span>
+                                        </li>
+                                        <li>
+                                            <span class="text-muted">Formato:</span> 
+                                            <span><?= $info['icon'] ?> <?= $info['label'] ?></span>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="col-6">
@@ -148,37 +171,29 @@ $fechaSubida = $existeArchivo ? date('d/m/Y', filemtime($rutaArchivo)) : date('d
                                 <?php else: ?>
                                     <h5 class="mb-3">Deja tu opinión</h5>
                                     <?php $form = ActiveForm::begin(); ?>
-                                        
                                         <div class="mb-3">
                                             <?= $form->field($nuevoComentario, 'contenido')
-                                                ->textarea(['rows' => 3, 'placeholder' => 'Escribe aquí qué te ha parecido este material...', 'class' => 'form-control'])
+                                                ->textarea(['rows' => 3, 'placeholder' => 'Escribe aquí tu opinión...', 'class' => 'form-control'])
                                                 ->label(false) ?>
                                         </div>
-                                        
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">
-                                                Publicando como: <strong><?= Html::encode(Yii::$app->user->identity->nombre) ?></strong>
-                                            </small>
+                                            <small class="text-muted">Publicando como: <strong><?= Html::encode(Yii::$app->user->identity->nombre) ?></strong></small>
                                             <button type="submit" class="btn btn-primary">Enviar Comentario</button>
                                         </div>
-
                                     <?php ActiveForm::end(); ?>
                                 <?php endif; ?>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
                 
                 <div class="col-md-4">
-                    <div class="card shadow-sm border-0 bg-light sticky-top" style="top: 20px;">
+                    <div class="card shadow-sm border-0 bg-light">
                         <div class="card-body text-center">
                             <h5 class="text-muted mb-3">¿Te ha servido?</h5>
-                            
                             <?php if (Yii::$app->user->isGuest): ?>
                                 <div class="p-3">
-                                    <p class="small text-muted mb-3">Inicia sesión para valorar este documento.</p>
+                                    <p class="small text-muted mb-3">Inicia sesión para valorar.</p>
                                     <a href="<?= Url::to(['site/login']) ?>" class="btn btn-outline-primary btn-sm">Acceder</a>
                                 </div>
                             <?php else: ?>
@@ -193,15 +208,13 @@ $fechaSubida = $existeArchivo ? date('d/m/Y', filemtime($rutaArchivo)) : date('d
                                         </a>
                                     <?php endforeach; ?>
                                 </div>
-                                <small class="text-muted">Tu voto ayuda a destacar los mejores apuntes.</small>
+                                <small class="text-muted">Tu voto ayuda a mejorar el contenido.</small>
                             <?php endif; ?>
-                            
                         </div>
                     </div>
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
