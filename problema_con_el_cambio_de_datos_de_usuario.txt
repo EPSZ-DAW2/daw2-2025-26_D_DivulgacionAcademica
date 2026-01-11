@@ -1,1 +1,0 @@
-No se cambia porque no esta bien configurado `/codigo/views/usuario/_form.php` tengo que dar vueltas, la logica de esta parte esta en `/codigo/controllers/UsuarioController.php` y se manejan los datos de la base de datos mediante el archivo `/codigo/models/Usuario.php`
