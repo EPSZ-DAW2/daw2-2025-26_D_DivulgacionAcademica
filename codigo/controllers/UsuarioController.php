@@ -23,29 +23,23 @@ class UsuarioController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+                'only' => ['perfil', 'index', 'create', 'update', 'delete'], // Acciones a proteger
                 'rules' => [
-                    // REGLA 1: Acceso Básico (Perfil + Editarse a sí mismo)
+                    //Reglas para el resto de usuarios no admin
                     [
-                        'actions' => ['perfil', 'update'],
+                        'actions' => ['perfil'],
                         'allow' => true,
-                        'roles' => ['@'], // Usuarios autenticados
+                        'roles' => ['@'], // '@' = Usuario autenticado (logueado)
                     ],
-                    // REGLA 2: Admin Total (Puede hacer todo lo demás: crear, borrar, index)
+                    // Reglas para administradores (ejemplo)
                     [
-                        'actions' => ['index', 'view', 'create', 'delete'],
+                        'actions' => ['index', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            // Verifica si el rol es 'admin' usando el modelo Identity
                             return Yii::$app->user->identity->rol === 'admin';
                         }
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
                 ],
             ],
         ];

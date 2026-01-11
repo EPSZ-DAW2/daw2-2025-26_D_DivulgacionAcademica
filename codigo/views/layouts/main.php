@@ -58,7 +58,7 @@ AppAsset::register($this);
               </li>
           <?php endif; ?>
 
-            <li><a href="<?= Url::to(['/site/profile']) ?>" class="nav__link">Mi Perfil</a></li>
+            <li><a href="<?= Url::to(['/usuario/perfil']) ?>" class="nav__link">Mi Perfil</a></li>
              <li>
                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
                 <?= Html::submitButton('Cerrar Sesión (' . Yii::$app->user->identity->username . ')', ['class' => 'nav__link btn--ghost', 'style' => 'border:none; background:none; cursor:pointer;']) ?>

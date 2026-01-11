@@ -74,9 +74,6 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     ];
 }
 
-  /**
-   * ETIQUETAS DE ATRIBUTOS (Implementación del PENDIENTE)
-   */
   public function attributeLabels()
   {
       return [
