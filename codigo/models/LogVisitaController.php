@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LogVisitaController implements the CRUD actions for LogVisita model.
+ * LogVisitaController implementa el CRUD de acciones por el modelo LogVisita.
  */
 class LogVisitaController extends Controller
 {
@@ -43,7 +43,7 @@ class LogVisitaController extends Controller
     }
 
     /**
-     * Lists all LogVisita models.
+     * Muestra todos los modelos de LogVisita.
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class LogVisitaController extends Controller
     }
 
     /**
-     * Displays a single LogVisita model.
+     * Muestra un solo modelo de LogVisita
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -72,8 +72,8 @@ class LogVisitaController extends Controller
     }
 
     /**
-     * Creates a new LogVisita model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * Crea un nuevo modelo de LogVisita
+     * - Si la creacion es exitosa, el navegador sera redirigido a la pagina 'view'
      * @return string|\yii\web\Response
      */
     public function actionCreate()
@@ -94,8 +94,8 @@ class LogVisitaController extends Controller
     }
 
     /**
-     * Updates an existing LogVisita model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * Actualiza el modelo LogVisita existente
+     * - Si la actualizacion es exitosa, el navegador sera redirigido a la pagina 'view'
      * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
@@ -114,8 +114,8 @@ class LogVisitaController extends Controller
     }
 
     /**
-     * Deletes an existing LogVisita model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * Borra el modelo LogVisita existente
+     * - Si el borrado es exitoso, el navegador sera redirigido a la pagina 'index'
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
@@ -128,8 +128,8 @@ class LogVisitaController extends Controller
     }
 
     /**
-     * Finds the LogVisita model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
+     * Encuentra el modelo LogVisita basado en el valor de la clave primaria
+     * - Si el modelo no se encuentra se devolvera un error 404
      * @param int $id ID
      * @return LogVisita the loaded model
      * @throws NotFoundHttpException if the model cannot be found

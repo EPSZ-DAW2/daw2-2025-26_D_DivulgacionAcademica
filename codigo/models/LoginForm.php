@@ -66,7 +66,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Finds user by [[username]]
+     * Ecuentra al usuario por el valor de username en la base de datos
      *
      * @return User|null
      */

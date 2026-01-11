@@ -65,7 +65,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
+     * Enseña la pagina index
      *
      * @return string
      */
@@ -75,7 +75,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Login action.
+     * Accion de inicio de sesion.
      *
      * @return Response|string
      */
@@ -103,7 +103,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Logout action.
+     * Accion de cierre de sesion.
      *
      * @return Response
      */
@@ -120,7 +120,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
+     * Muestra la pagina de contacto.
      *
      * @return Response|string
      */
@@ -138,7 +138,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays about page.
+     * Muestra la pagina de sobre mi .
      *
      * @return string
      */
@@ -146,10 +146,6 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
-    // ------------------------------------------------------------------------
-    // NUEVAS FUNCIONES AÑADIDAS (Register y Logs)
-    // ------------------------------------------------------------------------
 
     /**
      * Acción para registrar un nuevo usuario (Register).

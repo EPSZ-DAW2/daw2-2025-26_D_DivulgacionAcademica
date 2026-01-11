@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 
 /**
- * ContactForm es el modelo que usa contact form
+ * ContactForm is the model behind the contact form.
  */
 class ContactForm extends Model
 {
@@ -18,12 +18,12 @@ class ContactForm extends Model
 
 
     /**
-     * @return array de validacion de reglas
+     * @return array the validation rules.
      */
     public function rules()
     {
         return [
-            // nombre, email, subject y body son obligatorios
+            // name, email, subject and body are required
             [['name', 'email', 'subject', 'body'], 'required'],
             // email has to be a valid email address
             ['email', 'email'],
