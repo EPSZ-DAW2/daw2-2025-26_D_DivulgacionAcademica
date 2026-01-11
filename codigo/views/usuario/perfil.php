@@ -2,14 +2,13 @@
 
 use yii\helpers\Html;
 use yii\bootstrap5\Tabs;
-use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
 
-// Importar modelos
+// Modelos
 use app\models\Documento;
-use app\models\DocumentoComentario; // Preguntas y respuestas (Comentarios)
-use app\models\UsuarioColeccion;    // Tabla pivote para Colecciones
-// use app\models\Incidencia;       // Descomenta si Q&A se refiere a tickets de soporte
+use app\models\Coleccion;
+use app\models\Pregunta;
+use app\models\Respuesta;
 
 /** @var yii\web\View $this */
 /** @var app\models\Usuario $model */
@@ -17,35 +16,41 @@ use app\models\UsuarioColeccion;    // Tabla pivote para Colecciones
 $this->title = 'Mi Perfil';
 $this->params['breadcrumbs'][] = $this->title;
 
-// 1. DATA PROVIDER: MATERIALES (Documentos subidos por el usuario)
+// 1. MATERIALES (Documentos subidos)
 $materialesProvider = new ActiveDataProvider([
     'query' => Documento::find()->where(['autorId' => $model->id]),
     'pagination' => ['pageSize' => 5],
     'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
 ]);
 
-// 2. DATA PROVIDER: COLECCIONES 
-// Asumiendo que 'usuario_coleccion' es la tabla que vincula al usuario con sus colecciones guardadas.
-// Si tienes un modelo Coleccion relacionado, usa joinWith.
-$coleccionesProvider = new ActiveDataProvider([
-    'query' => \app\models\Coleccion::find()
-        ->joinWith('usuarios') // Asumiendo relación en Coleccion: getUsuarios() via usuario_coleccion
-        ->where(['usuario.id' => $model->id]), // Filtra colecciones donde este usuario está vinculado
+// 2. COLECCIONES CREADAS (Soy el autor)
+$misColeccionesProvider = new ActiveDataProvider([
+    'query' => Coleccion::find()->where(['usuarioId' => $model->id]),
     'pagination' => ['pageSize' => 5],
+    'sort' => ['defaultOrder' => ['fecha_actualizacion' => SORT_DESC]],
 ]);
-// NOTA: Si no tienes la relación definida en el modelo Coleccion, usa esto temporalmente:
-/*
-$coleccionesProvider = new ActiveDataProvider([
-    'query' => \app\models\UsuarioColeccion::find()->where(['usuarioId' => $model->id]),
-]);
-*/
 
-// 3. DATA PROVIDER: PREGUNTAS Y RESPUESTAS
-// Aquí mostramos los comentarios que el usuario ha hecho en documentos (Interacción Q&A)
-$qaProvider = new ActiveDataProvider([
-    'query' => DocumentoComentario::find()->where(['usuarioId' => $model->id]),
+// 3. COLECCIONES GUARDADAS (Me he unido a ellas)
+// Usamos la relación 'usuarios' que existe en tu modelo Coleccion.php
+$coleccionesGuardadasProvider = new ActiveDataProvider([
+    'query' => Coleccion::find()
+        ->joinWith('usuarios') // Relación many-to-many en Coleccion
+        ->where(['usuario.id' => $model->id]) // Filtra donde el usuario actual está en la lista de unidos
+        ->andWhere(['<>', 'coleccion.usuarioId', $model->id]), // Opcional: Excluir las que yo mismo creé
     'pagination' => ['pageSize' => 5],
-    'sort' => ['defaultOrder' => ['fecha' => SORT_DESC]],
+]);
+
+// 4. Q&A
+$preguntasProvider = new ActiveDataProvider([
+    'query' => Pregunta::find()->where(['usuarioId' => $model->id]),
+    'pagination' => ['pageSize' => 5],
+    'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+]);
+
+$respuestasProvider = new ActiveDataProvider([
+    'query' => Respuesta::find()->where(['usuarioId' => $model->id]),
+    'pagination' => ['pageSize' => 5],
+    'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
 ]);
 
 ?>
@@ -84,24 +89,30 @@ $qaProvider = new ActiveDataProvider([
         <div class="col-md-8">
             
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white">
+                <div class="card-header bg-white p-0">
                     <?php
                     echo Tabs::widget([
-                        'navType' => 'nav-tabs card-header-tabs',
+                        'navType' => 'nav-tabs card-header-tabs m-0',
                         'encodeLabels' => false,
                         'items' => [
                             [
-                                'label' => '<i class="bi bi-file-earmark-text"></i> Mis Materiales',
+                                'label' => '<i class="bi bi-file-earmark-text"></i> Materiales',
                                 'content' => $this->render('_tab_materiales', ['dataProvider' => $materialesProvider]),
                                 'active' => true,
                             ],
                             [
-                                'label' => '<i class="bi bi-collection"></i> Mis Colecciones',
-                                'content' => $this->render('_tab_colecciones', ['dataProvider' => $coleccionesProvider]),
+                                'label' => '<i class="bi bi-collection"></i> Colecciones',
+                                'content' => $this->render('_tab_colecciones', [
+                                    'creadasProvider' => $misColeccionesProvider,
+                                    'guardadasProvider' => $coleccionesGuardadasProvider
+                                ]),
                             ],
                             [
-                                'label' => '<i class="bi bi-chat-dots"></i> Preguntas/Respuestas',
-                                'content' => $this->render('_tab_qa', ['dataProvider' => $qaProvider]),
+                                'label' => '<i class="bi bi-chat-dots"></i> Q&A',
+                                'content' => $this->render('_tab_qa', [
+                                    'preguntasProvider' => $preguntasProvider,
+                                    'respuestasProvider' => $respuestasProvider
+                                ]),
                             ],
                         ],
                     ]);
@@ -109,57 +120,35 @@ $qaProvider = new ActiveDataProvider([
                 </div>
             </div>
 
-            <div class="card shadow-sm border-danger">
-                <div class="card-header bg-danger text-white">
-                    <strong><i class="bi bi-shield-lock-fill"></i> Historial de Seguridad (Logs)</strong>
+            <div class="card shadow-sm border-danger mt-4">
+                <div class="card-header bg-danger text-white py-1 px-3">
+                    <small><strong><i class="bi bi-shield-lock"></i> Seguridad</strong></small>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover mb-0 text-small">
-                            <thead class="table-light">
+                    <table class="table table-sm table-striped mb-0 text-muted" style="font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>Acción</th><th>IP</th><th>Huella Navegador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (class_exists('\app\models\UserLog')):
+                                $logs = \app\models\UserLog::find()->where(['user_id' => $model->id])->orderBy(['created_at' => SORT_DESC])->limit(3)->all();
+                                foreach ($logs as $log): ?>
                                 <tr>
-                                    <th>Fecha</th>
-                                    <th>Acción</th>
-                                    <th>IP</th>
-                                    <th>Navegador</th>
+                                    <td><?= Yii::$app->formatter->asRelativeTime($log->created_at) ?></td>
+                                    <td><?= Html::encode($log->action) ?></td>
+                                    <td><?= Html::encode($log->ip_address) ?></td>
+                                    <td><?= Html::encode($log->user_agent) ?></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                // Asegurar que el modelo UserLog existe o usar datos dummy si no
-                                if (class_exists('\app\models\UserLog')):
-                                    $logs = \app\models\UserLog::find()
-                                        ->where(['user_id' => $model->id])
-                                        ->orderBy(['created_at' => SORT_DESC])
-                                        ->limit(5) // Solo los últimos 5
-                                        ->all();
-                                    
-                                    if ($logs):
-                                        foreach ($logs as $log): ?>
-                                        <tr>
-                                            <td style="white-space:nowrap;"><?= Yii::$app->formatter->asRelativeTime($log->created_at) ?></td>
-                                            <td><span class="badge bg-secondary"><?= Html::encode($log->action) ?></span></td>
-                                            <td><small class="font-monospace"><?= Html::encode($log->ip_address) ?></small></td>
-                                            <td class="text-truncate" style="max-width: 150px;" title="<?= Html::encode($log->user_agent) ?>">
-                                                <small class="text-muted"><?= Html::encode($log->user_agent) ?></small>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; 
-                                    else: ?>
-                                        <tr><td colspan="4" class="text-center text-muted p-3">Sin actividad reciente registrada.</td></tr>
-                                    <?php endif; 
-                                else: ?>
-                                    <tr><td colspan="4" class="text-center text-muted p-3"><em>El sistema de logs no está activo.</em></td></tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card-footer bg-light text-end">
-                    <small class="text-muted">Solo tú puedes ver este historial.</small>
+                                <?php endforeach; 
+                            else: ?>
+                                <tr><td colspan="3" class="text-center p-2">Logs no activos.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
