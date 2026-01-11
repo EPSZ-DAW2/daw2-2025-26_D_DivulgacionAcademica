@@ -23,9 +23,18 @@ $stats = [
 
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <h1 class="mb-2 mb-md-0"><i class="bi bi-question-circle"></i> <?= Html::encode($this->title) ?></h1>
-            <a href="<?= Url::to(['create']) ?>" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Hacer Pregunta
-            </a>
+            
+            <div>
+                <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin'): ?>
+                    <a href="<?= Url::to(['admin']) ?>" class="btn btn-danger me-2">
+                        <i class="bi bi-shield-lock-fill"></i> Administrar
+                    </a>
+                <?php endif; ?>
+
+                <a href="<?= Url::to(['create']) ?>" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Hacer Pregunta
+                </a>
+            </div>
         </div>
 
         <div class="row mb-4">
@@ -86,14 +95,19 @@ $stats = [
                                     <div class="mb-1">
                                         <?php 
                                         // Determinar color de la etiqueta según estado
-                                        $claseEstado = match($model->estado) {
+                                        // Se usa un match seguro o fallback
+                                        $estado = $model->estado ?? 'sin_responder';
+                                        $claseEstado = match($estado) {
                                             'resuelta' => 'success',
                                             'respondida' => 'info',
                                             default => 'warning text-dark'
                                         };
+                                        
+                                        // Intentamos usar el método getEstadoTexto si existe, sino el valor crudo
+                                        $textoEstado = method_exists($model, 'getEstadoTexto') ? $model->getEstadoTexto() : ucfirst($estado);
                                         ?>
                                         <span class="badge bg-<?= $claseEstado ?>">
-                                            <?= ucfirst($model->getEstadoTexto()) // Usando el método del modelo si existe, o $model->estado ?>
+                                            <?=Html::encode($textoEstado) ?>
                                         </span>
                                     </div>
                                     
