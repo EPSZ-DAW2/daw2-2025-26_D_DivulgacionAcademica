@@ -55,4 +55,61 @@ class QandaController extends Controller
             'resumen' => $resumen,
         ]);
     }
+
+/**
+     * Muestra el detalle de una pregunta.
+     * @param int $id
+     * @return string
+     */
+    public function actionView($id)
+    {
+        $model = Pregunta::findOne($id);
+        
+        if (!$model) {
+            throw new \yii\web\NotFoundHttpException("La pregunta no existe.");
+        }
+
+        // Renderizamos la vista 'view.php' que acabamos de crear
+        return $this->render('view', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Procesa el formulario de respuesta.
+     */
+    public function actionResponder($id)
+    {
+        $pregunta = Pregunta::findOne($id);
+        if (!$pregunta) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        if (Yii::$app->request->isPost) {
+            $contenido = Yii::$app->request->post('contenido_respuesta');
+            
+            if (!empty($contenido)) {
+                $respuesta = new Respuesta();
+                $respuesta->pregunta_id = $pregunta->id;
+                $respuesta->usuario_id = Yii::$app->user->id;
+                $respuesta->contenido = $contenido;
+                // $respuesta->fecha_creacion = date('Y-m-d H:i:s'); // Si tu BD no lo pone automático
+                
+                if ($respuesta->save()) {
+                    Yii::$app->session->setFlash('success', '¡Respuesta publicada!');
+                    
+                    // Cambiar estado a 'answered' si estaba pendiente
+                    if ($pregunta->estado === 'pending') {
+                        $pregunta->estado = 'answered';
+                        $pregunta->save();
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Error al guardar la respuesta.');
+                }
+            }
+        }
+
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
 }
