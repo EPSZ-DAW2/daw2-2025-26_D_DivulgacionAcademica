@@ -20,7 +20,7 @@ use yii\helpers\Html;
                     'attribute' => 'titulo', // Ajusta si el campo se llama distinto
                     'format' => 'raw',
                     'value' => function($model) {
-                        return Html::a(Html::encode($model->titulo ?? 'Sin título'), ['pregunta/view', 'id' => $model->id]);
+                        return Html::a(Html::encode($model->titulo ?? 'Sin título'), ['qand-a/view', 'id' => $model->id]);
                     }
                 ],
                 [
