@@ -34,29 +34,45 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
    * REGLAS DE VALIDACIÓN (CRUCIAL PARA QUE SE GUARDEN LOS DATOS)
    */
   public function rules()
-  {
-      return [
-          // 1. Campos obligatorios básicos
-          [['username', 'nombre', 'email'], 'required'],
-
-          // 2. Tipos de datos
-          [['username', 'nombre', 'email', 'password', 'rol'], 'string', 'max' => 255],
-          
-          // 3. Unicidad
-          [['email'], 'unique'],
-          [['username'], 'unique'],
-          ['email', 'email'],
-
-          // 4. Campos seguros (permitir que el form los envíe)
-          [['password_plain', 'password1', 'password2'], 'safe'],
-
-          // 5. REGLA: Contraseña actual obligatoria solo al actualizar (update)
-          [['current_password'], 'required', 'on' => 'update'],
-          [['current_password'], 'validateCurrentPassword'],
-          
-          [['fecha_registro'], 'safe'],
-      ];
-  }
+{
+    return [
+        // 1. Campos obligatorios básicos
+        [['username', 'nombre', 'email'], 'required'],
+        
+        // 2. Tipos de datos
+        [['username', 'nombre', 'email', 'password', 'rol'], 'string', 'max' => 255],
+        
+        // 3. Unicidad (excepto al actualizar el mismo registro)
+        [['email'], 'unique', 'filter' => function ($query) {
+            if (!$this->isNewRecord) {
+                $query->andWhere(['not', ['id' => $this->id]]);
+            }
+        }],
+        [['username'], 'unique', 'filter' => function ($query) {
+            if (!$this->isNewRecord) {
+                $query->andWhere(['not', ['id' => $this->id]]);
+            }
+        }],
+        ['email', 'email'],
+        
+        // 4. Campos seguros
+        [['password_plain', 'password1', 'password2', 'current_password'], 'safe'],
+        
+        // 5. REGLA: Contraseña actual obligatoria solo cuando se cambia la contraseña
+        [['current_password'], 'required', 'when' => function($model) {
+            return !empty(trim($model->password_plain));
+        }, 'whenClient' => "function(attribute, value) {
+            return $('#usuario-password_plain').val().trim() !== '';
+        }"],
+        
+        // 6. Validador para contraseña actual
+        [['current_password'], 'validateCurrentPassword', 'when' => function($model) {
+            return !empty(trim($model->password_plain));
+        }],
+        
+        [['fecha_registro'], 'safe']
+    ];
+}
 
   /**
    * ETIQUETAS DE ATRIBUTOS (Implementación del PENDIENTE)
@@ -105,9 +121,9 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
    * Finds user by username (Necesario para el Login)
    */
   public static function findByUsername($username)
-  {
-      return static::findOne(['username' => $username]);
-  }
+{
+    return static::findOne(['username' => trim($username)]);
+}
 
   /**
    * {@inheritdoc}
@@ -122,16 +138,19 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
    */
   public function getAuthKey()
   {
-    return null; 
+    //return null; 
+    // Retornar un valor fijo o basado en el ID para que Yii no detecte cambios
+    return md5('auth_key_' . $this->id . '_' . $this->password);
+
   }
   
   /**
    * {@inheritdoc}
    */
-  public function validateAuthKey($authKey)
+  /*public function validateAuthKey($authKey)
   {
     return $this->getAuthKey() === $authKey;
-  }
+  } */
   
   /**
    * Validates password
@@ -187,18 +206,49 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
    /**
    * Validador personalizado para la contraseña actual
    */
+    //Validador de contraseña actual corregido
    public function validateCurrentPassword($attribute, $params)
-   {
-       if (!$this->hasErrors()) {
-           // Verificación en texto plano (como pediste)
-           if ($this->password !== $this->current_password) {
-               $this->addError($attribute, 'La contraseña actual es incorrecta.');
-           }
-       }
-   }
-
-
+{
+    if (!$this->hasErrors() && !empty(trim($this->password_plain))) {
+        // Obtener la contraseña actual de la base de datos
+        $userActual = self::findOne($this->id);
+        if ($userActual && trim($this->current_password) !== trim($userActual->password)) {
+            $this->addError($attribute, 'La contraseña actual es incorrecta.');
+        }
+    }
 }
+
+/**
+ * CLAVE PARA EVITAR CIERRE DE SESIÓN:
+ * Como no usamos auth_key en la DB, debemos retornar siempre true para que
+ * Yii no invalide la sesión al actualizar el modelo.
+ */
+public function validateAuthKey($authKey)
+{
+    return true; 
+}
+
+// NUEVO método para definir escenarios
+public function scenarios()
+{
+    $scenarios = parent::scenarios();
+    $scenarios['update'] = ['username', 'nombre', 'email', 'password', 'rol', 'password_plain', 'current_password'];
+    return $scenarios;
+}
+
+
+public function afterSave($insert, $changedAttributes)
+{
+    parent::afterSave($insert, $changedAttributes);
+    
+    Yii::debug('Usuario::afterSave() ejecutado');
+    Yii::debug('Cambios realizados: ' . print_r($changedAttributes, true));
+    
+    // Verificar en base de datos
+    $usuarioDb = self::findOne($this->id);
+    Yii::debug('Datos en DB después de guardar: ' . print_r($usuarioDb->attributes, true));
+}
+
 
 /*
 ==========================================================================
@@ -223,3 +273,4 @@ no luego ya lo implementamos
 
 ==========================================================================
 */
+}

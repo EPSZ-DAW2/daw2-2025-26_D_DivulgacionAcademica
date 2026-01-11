@@ -614,7 +614,7 @@ CREATE TABLE `usuario` (
   `password` varchar(255) NOT NULL,
   `rol` enum('admin','gestor','empresa','alumno') DEFAULT 'alumno',
   `fecha_registro` datetime DEFAULT current_timestamp(),
-  `username` char(255) DEFAULT NULL
+  `username` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

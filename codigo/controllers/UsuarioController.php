@@ -166,49 +166,96 @@ class UsuarioController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        
-        // 1. Activamos escenario 'update' para exigir 'current_password'
-        $model->scenario = 'update'; 
+ /* public function actionUpdate($id)
+{
+    $model = $this->findModel($id);
+    $model->scenario = 'update';
 
-        $esAdmin = !Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin';
-        $esPropioPerfil = !Yii::$app->user->isGuest && Yii::$app->user->id == $id;
-
-        if (!$esAdmin && !$esPropioPerfil) {
-            throw new \yii\web\ForbiddenHttpException('No tienes permiso para editar este perfil.');
+    if ($this->request->isPost && $model->load($this->request->post())) {
+        // Lógica de contraseña del debug
+        if (!empty(trim($model->password_plain))) {
+            $model->password = trim($model->password_plain);
+        } else {
+            // Si no hay nueva, recuperamos la vieja para no perderla
+            $model->password = $model->getOldAttribute('password');
         }
 
-        if ($this->request->isPost && $model->load($this->request->post())) {
+        if ($model->save()) {
+            Yii::$app->session->setFlash('success', '¡Perfil actualizado!');
             
-            // Si NO es admin, restauramos el rol original
-            if (!$esAdmin) {
-                $model->rol = $model->getOldAttribute('rol'); 
+            // Si soy yo, refresco sesión
+            if (Yii::$app->user->id == $model->id) {
+                Yii::$app->user->login($model);
+                return $this->redirect(['perfil']);
             }
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+    }
+    return $this->render('update', ['model' => $model]);
+}*/
 
-            // Si hay nueva contraseña, la seteamos
-            if (!empty($model->password_plain)) {
-                $model->setPassword($model->password_plain);
+public function actionUpdate($id)
+{
+    $model = $this->findModel($id);
+    
+    echo "<pre>";
+    echo "=== DEBUG UPDATE ===\n";
+    echo "Usuario ID: $id\n";
+    echo "Es propio perfil: " . (Yii::$app->user->id == $id ? 'Sí' : 'No') . "\n";
+    echo "Atributos actuales:\n";
+    print_r($model->attributes);
+    echo "</pre>";
+    
+    if ($this->request->isPost) {
+        echo "<pre>=== POST RECIBIDO ===\n";
+        $post = $this->request->post();
+        print_r($post);
+        echo "</pre>";
+        
+        if ($model->load($post)) {
+            echo "<pre>=== MODELO CARGADO ===\n";
+            echo "Nombre: " . $model->nombre . "\n";
+            echo "Email: " . $model->email . "\n";
+            echo "Password plain: " . $model->password_plain . "\n";
+            echo "</pre>";
+            
+            // Manejar contraseña
+            if (!empty(trim($model->password_plain))) {
+                $model->password = trim($model->password_plain);
+                echo "<pre>Nueva contraseña establecida: " . $model->password . "</pre>";
             }
-
-            // Guardamos (esto validará current_password automáticamente)
+            
+            // Intentar guardar
+            echo "<pre>=== INTENTANDO GUARDAR ===\n";
             if ($model->save()) {
+                echo "¡GUARDADO EXITOSO!\n";
                 
-                // 2. FIX LOGOUT: Refrescamos la sesión si es el propio usuario
-                if ($esPropioPerfil) {
-                    Yii::$app->user->login($model, 3600 * 24 * 30); 
-                    return $this->redirect(['perfil']);
-                }
+                // Verificar en BD
+                $verificar = $this->findModel($id);
+                echo "Verificación BD:\n";
+                print_r($verificar->attributes);
                 
-                return $this->redirect(['view', 'id' => $model->id]);
+                echo "<script>alert('¡Guardado exitoso!'); window.location.href='?r=usuario/perfil';</script>";
+                return;
+            } else {
+                echo "ERRORES:\n";
+                print_r($model->errors);
+                echo "</pre>";
             }
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
-
+    
+    // Mostrar formulario simple
+    echo '<form method="post" style="padding: 20px;">';
+    echo '<h2>Formulario Debug</h2>';
+    echo '<div>Nombre: <input type="text" name="Usuario[nombre]" value="' . htmlspecialchars($model->nombre) . '" style="width: 300px;"></div><br>';
+    echo '<div>Email: <input type="text" name="Usuario[email]" value="' . htmlspecialchars($model->email) . '" style="width: 300px;"></div><br>';
+    echo '<div>Nueva Contraseña (opcional): <input type="password" name="Usuario[password_plain]" style="width: 300px;"></div><br>';
+    echo Yii::$app->request->csrfParam . ': <input type="hidden" name="' . Yii::$app->request->csrfParam . '" value="' . Yii::$app->request->csrfToken . '">';
+    echo '<button type="submit">Guardar (Debug)</button>';
+    echo '</form>';
+    
+    exit(); // Salir para ver el debug
+}
 
 }

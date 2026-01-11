@@ -1,15 +1,15 @@
 <?php
 use yii\helpers\Html;
 
-/** @var yii\web\View $this */
-/** @var app\models\Usuario $model */
-
 $this->title = 'Actualizar Usuario: ' . $model->username;
-$this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Actualizar';
 ?>
-<div class="usuario-update">
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?= $this->render('_form', ['model' => $model]) ?>
+<div class="container">
+    <div class="page-header mb-8">
+        <h1 class="page-title"><?= Html::encode($this->title) ?></h1>
+        <p class="page-description">Modifica los datos del perfil de usuario o sus permisos.</p>
+    </div>
+
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
 </div>
