@@ -95,7 +95,7 @@ $info = $tipoInfo[$ext] ?? ['icon' => '📁', 'label' => strtoupper($ext) . ' (A
                             <button class="btn btn-secondary btn-lg px-4" disabled>⚠️ No disponible</button>
                         <?php endif; ?>
                         
-                        <?= Html::a('📚 Añadir a colección', ['coleccion/agregar-material', 'docId' => $model->id], ['class' => 'btn btn-outline-primary btn-lg px-4']) ?>
+                        <a href="#" class="btn btn-outline-primary btn-lg px-4">📚 Añadir a colección</a>
                         
                         <a href="<?= Url::to(['materiales/index']) ?>" class="btn btn-link text-muted px-4 ms-auto">Volver al listado</a>
                     </div>

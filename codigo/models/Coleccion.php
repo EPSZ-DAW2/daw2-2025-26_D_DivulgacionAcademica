@@ -34,11 +34,10 @@ class Coleccion extends ActiveRecord
     {
         return [
             [['titulo', 'usuarioId'], 'required'],
-            [['descripcion', 'tipo_acceso'], 'string'],
+            [['descripcion'], 'string'],
             [['usuarioId', 'descargas'], 'integer'],
             [['fecha_actualizacion'], 'safe'],
-            [['tipo_acceso'], 'in', 'range' => ['publico', 'privado']],
-            [['titulo'], 'string', 'max' => 255],
+            [['titulo'], 'string', 'max' => 150],
             // Relación de clave foránea con la tabla usuario
             [['usuarioId'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['usuarioId' => 'id']],
         ];
@@ -67,38 +66,4 @@ class Coleccion extends ActiveRecord
     {
         return $this->hasOne(Usuario::class, ['id' => 'usuarioId']);
     }
-
-    /**
- * Relación con los Documentos (Muchos a Muchos)
- * A través de la tabla de unión coleccion_documento
- */
-public function getDocumentos()
-{
-    return $this->hasMany(Documento::class, ['id' => 'documentoId'])
-        ->viaTable('coleccion_documento', ['coleccionId' => 'id']);
-}
-
-/**
- * Verifica si un usuario específico ya está unido a esta colección
- */
-public function estaUnido($usuarioId)
-{
-    return (new \yii\db\Query())
-        ->from('usuario_coleccion')
-        ->where(['usuarioId' => $usuarioId, 'coleccionId' => $this->id])
-        ->exists();
-}
-
-/**
- * Relación con los usuarios que se han unido a esta colección
- */
-public function getUsuarios()
-{
-    // Una colección tiene muchos usuarios a través de la tabla usuario_coleccion
-    return $this->hasMany(Usuario::class, ['id' => 'usuarioId'])
-                ->viaTable('usuario_coleccion', ['coleccionId' => 'id']);
-}
-
-
-
 }

@@ -7,7 +7,7 @@ use app\assets\AppAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-// Registramos tus estilos
+// Registrr estilos
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -31,77 +31,63 @@ AppAsset::register($this);
       
       <nav class="nav" role="navigation" aria-label="Navegación principal">
         <ul class="nav__list">
-          <li>
-            <a href="<?= Url::to(['/site/index']) ?>" class="nav__link <?= (Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index') ? 'nav__link--active' : '' ?>">
-                Inicio
-            </a>
-          </li>
+          <li><a href="<?= Url::to(['/site/index']) ?>" class="nav__link <?= (Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index') ? 'nav__link--active' : '' ?>">Inicio</a></li>
           
-          <li><a href="<?= Url::to(['/materiales/index']) ?>" class="nav__link">Materiales</a></li>
+          <li><a href="<?= Url::to(['/materiales/index']) ?>" class="nav__link <?= (Yii::$app->controller->id == 'materiales') ? 'nav__link--active' : '' ?>">Materiales</a></li>
+          
           <li><a href="<?= Url::to(['/coleccion/index']) ?>" class="nav__link">Colecciones</a></li>
-          <li><a href="<?= Url::to(['/qand-a/index']) ?>" class="nav__link">QandA</a></li>
+          
+          <li><a href="<?= Url::to(['/qand-a/index']) ?>" class="nav__link">Q&amp;A</a></li>
+          
+          <?php if (Yii::$app->user->isGuest): ?>
+            <li><a href="<?= Url::to(['/site/login']) ?>" class="nav__link">Iniciar sesión</a></li>
+            <li><a href="<?= Url::to(['/site/register']) ?>" class="btn btn--primary btn--sm">Registrarse</a></li>
+          <?php else: ?>
+            <li>
+                <a href="<?= Url::to(['/materiales/subir']) ?>" class="btn btn--primary btn--sm" style="background-color: #28a745; border-color: #28a745;">
+                    📤 Subir
+                </a>
+            </li>
 
-          <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin'): ?>
-              <li>
-                  <a href="<?= Url::to(['/usuario/index']) ?>" class="nav__link" style="color: #d9534f; font-weight: bold;">
-                      &#9881; Gestión Usuarios
-                  </a>
-              </li>
+            <li><a href="<?= Url::to(['/site/profile']) ?>" class="nav__link">Mi Perfil</a></li>
+             <li>
+                <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
+                <?= Html::submitButton('Cerrar Sesión (' . Yii::$app->user->identity->username . ')', ['class' => 'nav__link btn--ghost', 'style' => 'border:none; background:none; cursor:pointer;']) ?>
+                <?= Html::endForm() ?>
+            </li>
           <?php endif; ?>
         </ul>
       </nav>
-      
-    <div class="header__auth" style="display: flex; align-items: center; gap: 15px;">
-        <?php if (Yii::$app->user->isGuest): ?>
-            <a href="<?= Url::to(['/site/login']) ?>" class="nav__link">Iniciar sesión</a>
-            <a href="<?= Url::to(['/site/register']) ?>" class="btn btn--primary btn--sm">Registrarse</a>
-        <?php else: ?>
-            <span class="header__user-welcome" style="margin-right: 5px; color: #666;">
-                Hola, <?= Html::encode(Yii::$app->user->identity->username) ?>
-            </span>
-
-            <a href="<?= Url::to(['/usuario/perfil']) ?>" class="nav__link">
-                Mi Perfil
-            </a>
-
-            <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline', 'style' => 'margin: 0;']) ?>
-                <?= Html::submitButton(
-                    'Cerrar Sesión',
-                    [
-                        'class' => 'button', 
-                        'style' => 'background-color: #dc2626; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500;'
-                    ]
-                ) ?>
-            <?= Html::endForm() ?> <?php endif; ?>
-    </div>
-
     </div>
   </header>
-
-  <main class="main-content" role="main">
-    <div class="container">
-        <?php if (Yii::$app->session->hasFlash('success')): ?>
-            <div class="alert alert-success">
-                <?= Yii::$app->session->getFlash('success') ?>
-            </div>
-        <?php endif; ?>
-
-        <?= $content ?>
-    </div>
+  
+  <main id="main-content" class="main" role="main">
+      <?= $content ?>
   </main>
-
+  
   <footer class="footer" role="contentinfo">
     <div class="footer__container">
       <div class="footer__content">
+        
         <div class="footer__section">
-          <h3 class="footer__section-title">Sobre nosotros</h3>
-          <p>Plataforma colaborativa para la divulgación académica y científica. Conectando conocimiento.</p>
+          <h3 class="footer__section-title">Portal Académico</h3>
+          <p>Plataforma colaborativa para compartir conocimiento y recursos educativos entre estudiantes y docentes.</p>
         </div>
         
         <div class="footer__section">
-          <h3 class="footer__section-title">Enlaces rápidos</h3>
+          <h3 class="footer__section-title">Recursos</h3>
           <ul class="footer__list">
-            <li class="footer__list-item"><a href="<?= Url::to(['/site/guide']) ?>" class="footer__link">Guía de uso</a></li>
+            <li class="footer__list-item"><a href="<?= Url::to(['/materiales/index']) ?>" class="footer__link">Explorar materiales</a></li>
+            <li class="footer__list-item"><a href="<?= Url::to(['/coleccion/index']) ?>" class="footer__link">Colecciones</a></li>
+            <li class="footer__list-item"><a href="<?= Url::to(['/dudas/index']) ?>" class="footer__link">Preguntas y respuestas</a></li>
+            <li class="footer__list-item"><a href="<?= Url::to(['/materiales/subir']) ?>" class="footer__link">Subir material</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer__section">
+          <h3 class="footer__section-title">Comunidad</h3>
+          <ul class="footer__list">
+            <li class="footer__list-item"><a href="<?= Url::to(['/site/guia']) ?>" class="footer__link">Guía de uso</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/site/normas']) ?>" class="footer__link">Normas de la comunidad</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/site/faq']) ?>" class="footer__link">Preguntas frecuentes</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/site/contact']) ?>" class="footer__link">Contacto</a></li>
@@ -114,6 +100,9 @@ AppAsset::register($this);
             <li class="footer__list-item"><a href="<?= Url::to(['/site/terms']) ?>" class="footer__link">Términos de uso</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/site/privacy']) ?>" class="footer__link">Política de privacidad</a></li>
             <li class="footer__list-item"><a href="<?= Url::to(['/site/license']) ?>" class="footer__link">Licencias</a></li>
+            <?php if (!Yii::$app->user->isGuest): ?>
+                <li class="footer__list-item"><a href="<?= Url::to(['/admin/index']) ?>" class="footer__link">Administración</a></li>
+            <?php endif; ?>
           </ul>
         </div>
       </div>
