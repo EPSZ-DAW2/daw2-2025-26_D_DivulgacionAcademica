@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\RegistroUsuarios; // Necesario para el formulario de registro
+use app\models\Pregunta;
 
 class SiteController extends Controller
 {
@@ -197,34 +198,4 @@ class SiteController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
-    /**
-     * Displays Q&A page.
-     *
-     * @return string
-     */
-    public function actionQa()
-    {
-        // Obtener preguntas ordenadas por fecha
-        // Nota: Asegúrate de que 'usuario' y 'respuestas' son los nombres exactos de las relaciones en tu modelo
-        $preguntas = Pregunta::find()
-            ->with(['usuario', 'respuestas.usuario']) 
-            ->orderBy(['fecha_creacion' => SORT_DESC])
-            ->all();
-
-        // Resumen de estados
-        $resumen = [
-            'total' => Pregunta::find()->count(),
-            'sin_responder' => Pregunta::find()->where(['estado' => 'pending'])->count(),
-            'respondida' => Pregunta::find()->where(['estado' => 'answered'])->count(),
-            'resuelta' => Pregunta::find()->where(['estado' => 'resolved'])->count(),
-        ];
-
-        return $this->render('qanda', [
-            'preguntas' => $preguntas,
-            'resumen' => $resumen,
-        ]);
     }
-
-
-}
