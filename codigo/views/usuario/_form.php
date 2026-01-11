@@ -55,24 +55,7 @@ $mostrarConfirmacion = !$isNew && $esPropioPerfil;
         </div>
     </div>
     
-    <?php if ($mostrarConfirmacion): ?>
-        <hr class="my-4">
-        <div class="row justify-content-center">
-            <div class="col-md-7 p-4" style="background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                <div class="text-center mb-3">
-                    <h5 class="text-warning-emphasis fw-bold" style="margin-bottom: 5px;">Confirmar cambios de perfil</h5>
-                    <p class="text-muted small">Por seguridad, introduce tu <strong>contraseña actual</strong> para guardar los cambios.</p>
-                </div>
-                
-                <?= $form->field($model, 'current_password')->passwordInput([
-                    'maxlength' => true,
-                    'placeholder' => 'Tu contraseña actual...',
-                    'style' => 'border-color: #ffda6a;'
-                ])->label(false) ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
+    
     <div class="form-group mt-5 text-center">
         <?= Html::submitButton($isNew ? 'Crear Usuario' : 'Guardar Cambios', [
             'class' => 'btn btn-success px-5 py-2',
