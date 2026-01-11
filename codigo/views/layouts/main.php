@@ -39,7 +39,7 @@ AppAsset::register($this);
           
           <li><a href="<?= Url::to(['/materiales/index']) ?>" class="nav__link">Materiales</a></li>
           <li><a href="<?= Url::to(['/coleccion/index']) ?>" class="nav__link">Colecciones</a></li>
-          <li><a href="<?= Url::to(['/qanda/index']) ?>" class="nav__link">QandA</a></li>
+          <li><a href="<?= Url::to(['/qand-a/index']) ?>" class="nav__link">QandA</a></li>
 
           <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin'): ?>
               <li>
@@ -51,7 +51,7 @@ AppAsset::register($this);
         </ul>
       </nav>
       
-      <div class="header__auth" style="display: flex; align-items: center; gap: 15px;">
+    <div class="header__auth" style="display: flex; align-items: center; gap: 15px;">
         <?php if (Yii::$app->user->isGuest): ?>
             <a href="<?= Url::to(['/site/login']) ?>" class="nav__link">Iniciar sesión</a>
             <a href="<?= Url::to(['/site/register']) ?>" class="btn btn--primary btn--sm">Registrarse</a>
@@ -59,7 +59,7 @@ AppAsset::register($this);
             <span class="header__user-welcome" style="margin-right: 5px; color: #666;">
                 Hola, <?= Html::encode(Yii::$app->user->identity->username) ?>
             </span>
-            
+
             <a href="<?= Url::to(['/usuario/perfil']) ?>" class="nav__link">
                 Mi Perfil
             </a>
@@ -72,9 +72,9 @@ AppAsset::register($this);
                         'style' => 'background-color: #dc2626; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500;'
                     ]
                 ) ?>
-            
-        <?php endif; ?>
-      </div>
+            <?= Html::endForm() ?> <?php endif; ?>
+    </div>
+
     </div>
   </header>
 
