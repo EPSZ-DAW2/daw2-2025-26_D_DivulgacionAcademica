@@ -23,13 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput()->label('Contraseña') ?>
 
-                <?php 
-                        echo $form->field($model, 'rol')->dropDownList([
-                            'estudiante' => 'Estudiante',
+                <?= $form->field($model, 'rol')->dropDownList([
+                            'alumno' => 'Alumno',
                             'gestor' => 'Gestor',
                             'empresa' => 'Empresa',
-                        ], ['prompt' => 'Seleccione un rol...']);
-                ?>
+                        ], ['prompt' => 'Seleccione un rol...']); ?>
 
 
                 <div class="form-group">

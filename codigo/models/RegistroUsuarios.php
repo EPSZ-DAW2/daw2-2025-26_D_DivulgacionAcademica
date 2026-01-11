@@ -40,7 +40,10 @@ class RegistroUsuarios extends Model
             ['password', 'string', 'min' => 4, 'message' => 'La contraseña debe tener al menos 4 caracteres.'],
             
             // Validaciones de longitud para nombre y apellidos
-            [['nombre', 'rol'], 'string', 'max' => 255],
+            [['nombre'], 'string', 'max' => 255],
+
+            //Validacion para el rol
+            [['rol'], 'string'],
         ];
     }
 
@@ -63,13 +66,14 @@ class RegistroUsuarios extends Model
         $user->rol = $this->rol;
         
         // Guardamos la contraseña en texto plano (según tu configuración actual)
-        // NOTA: Si en el futuro decides encriptar, usa: Yii::$app->security->generatePasswordHash($this->password);
+        // NOTA: Si en el futuro hay que encriptar, debemos usar: Yii::$app->security->generatePasswordHash($this->password);
         $user->password = $this->password; 
         
-        // Asignamos un rol por defecto si tu base de datos lo requiere
-//        $user->rol = 'usuario'; 
+        // Esto es por si queremos porner un rol por defecto.
+//        $user->rol = 'alumno'; 
 
         // Guardamos el modelo Usuario en la base de datos
         return $user->save();
     }
+
 }

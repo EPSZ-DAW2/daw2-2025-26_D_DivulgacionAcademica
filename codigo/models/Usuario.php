@@ -59,8 +59,8 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
   }
 
   /**
-   * ETIQUETAS DE ATRIBUTOS (Implementación del PENDIENTE)
-   */
+  * ETIQUETAS DE ATRIBUTOS
+  */
   public function attributeLabels()
   {
       return [
@@ -74,8 +74,6 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
       ];
   }
   
-  //PENDIENTE: Método "scenarios" (opcional).
-  //PENDIENTE: Método "find".
   
   //<<<---
   // Métodos necesarios para configurar el modelo respecto de la tabla a la que representa en la base de datos.
@@ -164,7 +162,7 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     const ROL_ADMIN = 'admin';
     const ROL_GESTOR = 'gestor';
     const ROL_EMPRESA = 'empresa';
-    const ROL_ESTUDIANTE = 'alumno'; // Ajustado a 'alumno' según tu DB
+    const ROL_ESTUDIANTE = 'alumno';
 
     // 2. Implementacion de los metodos llamados por los controladores
 
