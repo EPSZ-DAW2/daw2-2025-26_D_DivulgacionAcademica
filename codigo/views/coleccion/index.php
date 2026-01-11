@@ -22,7 +22,7 @@ $this->title = 'Colecciones Académicas - Portal Académico';
             <div class="alert alert--info m-0">
                 <p class="mb-0">
                     <a href="<?= Url::to(['site/login']) ?>" style="font-weight: var(--font-weight-semibold);">Inicia sesión</a> 
-                    como colaborador para crear tus propias colecciones
+                    como gestor para crear tus propias colecciones
                 </p>
             </div>
         </div>
