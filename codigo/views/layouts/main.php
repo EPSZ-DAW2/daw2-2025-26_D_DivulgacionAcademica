@@ -38,6 +38,7 @@ AppAsset::register($this);
           <li><a href="<?= Url::to(['/coleccion/index']) ?>" class="nav__link">Colecciones</a></li>
           
           <li><a href="<?= Url::to(['/qand-a/index']) ?>" class="nav__link">Q&amp;A</a></li>
+
           
           <?php if (Yii::$app->user->isGuest): ?>
             <li><a href="<?= Url::to(['/site/login']) ?>" class="nav__link">Iniciar sesión</a></li>
@@ -48,6 +49,14 @@ AppAsset::register($this);
                     📤 Subir
                 </a>
             </li>
+
+          <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin'): ?>
+              <li>
+                  <a href="<?= Url::to(['/usuario/index']) ?>" class="nav__link" style="color: #d9534f; font-weight: bold;">
+                      &#9881; Gestión Usuarios
+                  </a>
+              </li>
+          <?php endif; ?>
 
             <li><a href="<?= Url::to(['/site/profile']) ?>" class="nav__link">Mi Perfil</a></li>
              <li>
