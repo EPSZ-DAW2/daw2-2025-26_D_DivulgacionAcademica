@@ -39,6 +39,11 @@ use yii\widgets\ActiveForm;
                 'placeholder' => 'Describe brevemente qué materiales se encontrarán aquí...'
             ]) ?>
 
+            <?= $form->field($model, 'tipo_acceso')->dropDownList([
+                'publico' => '🔓 Pública (Visible para todos)',
+                'privado' => '🔒 Privada (Solo para mi)',
+            ], ['class' => 'form-input']) ?>
+
             <div class="flex items-center justify-between mt-8 pt-6" style="border-top: 1px solid var(--color-gray-200)">
                 <div class="flex gap-4">
                     <?= Html::submitButton(
