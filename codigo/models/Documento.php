@@ -22,11 +22,10 @@ class Documento extends ActiveRecord
             [['tipo_acceso'], 'string'],
             [['archivo_url'], 'string', 'max' => 255],
             
-            // --- CAMBIO AQUÍ: AÑADIMOS EXTENSIONES Y SUBIMOS TAMAÑO ---
             [['archivoFile'], 'file', 
                 'skipOnEmpty' => false, 
-                'extensions' => 'pdf, doc, docx, xls, xlsx, ppt, pptx, mp4', // Word, Excel, PowerPoint, Video
-                'maxSize' => 1024 * 1024 * 50 // Límite subido a 50MB para los vídeos
+                'extensions' => 'pdf, doc, docx, xls, xlsx, ppt, pptx, mp4', 
+                'maxSize' => 1024 * 1024 * 200 // Límite subido para los vídeos
             ],
         ];
     }
