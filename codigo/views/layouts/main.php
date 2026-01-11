@@ -38,8 +38,6 @@ AppAsset::register($this);
           </li>
           
           <li><a href="<?= Url::to(['/materiales/index']) ?>" class="nav__link">Materiales</a></li>
-          <li><a href="<?= Url::to(['/foro/index']) ?>" class="nav__link">Foro</a></li>
-          <li><a href="<?= Url::to(['/eventos/index']) ?>" class="nav__link">Eventos</a></li>
           <li><a href="<?= Url::to(['/coleccion/index']) ?>" class="nav__link">Colecciones</a></li>
 
           <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin'): ?>
