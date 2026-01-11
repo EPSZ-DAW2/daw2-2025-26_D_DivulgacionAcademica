@@ -78,6 +78,9 @@ class QandaController extends Controller
     /**
      * Procesa el formulario de respuesta.
      */
+/**
+     * Procesa el formulario de respuesta.
+     */
     public function actionResponder($id)
     {
         $pregunta = Pregunta::findOne($id);
@@ -85,6 +88,13 @@ class QandaController extends Controller
             throw new \yii\web\NotFoundHttpException();
         }
 
+        // Si es un invitado, se muestra un mensaje de error
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('error', 'Debes iniciar sesión para poder responder.');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        // Si es un usario registrado hacemos el post
         if (Yii::$app->request->isPost) {
             $contenido = Yii::$app->request->post('contenido_respuesta');
             
@@ -93,16 +103,17 @@ class QandaController extends Controller
                 $respuesta->pregunta_id = $pregunta->id;
                 $respuesta->usuario_id = Yii::$app->user->id;
                 $respuesta->contenido = $contenido;
-                // $respuesta->fecha_creacion = date('Y-m-d H:i:s'); // Si tu BD no lo pone automÃ¡tico
+                $respuesta->fecha_creacion = date('Y-m-d H:i:s');
                 
                 if ($respuesta->save()) {
-                    Yii::$app->session->setFlash('success', 'Â¡Respuesta publicada!');
+                    Yii::$app->session->setFlash('success', '¡Respuesta publicada!');
                     
                     // Cambiar estado a 'answered' si estaba pendiente
                     if ($pregunta->estado === 'pending') {
                         $pregunta->estado = 'answered';
                         $pregunta->save();
                     }
+                    return $this->refresh(); // Evita el reenvío del formulario al actualizar
                 } else {
                     Yii::$app->session->setFlash('error', 'Error al guardar la respuesta.');
                 }

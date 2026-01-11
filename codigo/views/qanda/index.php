@@ -6,9 +6,14 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = 'Dudas y Preguntas - Portal AcadÃ©mico';
+// --- LÓGICA DE PRIVILEGIOS ---
+$isAdmin = (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'admin');
+$isAlumno = (!Yii::$app->user->isGuest && Yii::$app->user->identity->rol === 'alumno');
+$currentUserId = Yii::$app->user->id;
 
-// Mapeamos tu resumen a las estadÃ­sticas visuales
+$this->title = 'Dudas y Preguntas - Portal Académico';
+
+// Mapeamos tu resumen a las estadísticas visuales
 $stats = [
     'Total' => $resumen['total'],
     'Sin responder' => $resumen['sin_responder'],
@@ -22,30 +27,35 @@ $stats = [
         
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-question-circle"></i> <?= Html::encode($this->title) ?></h1>
-            <a href="<?= Url::to(['create']) ?>" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Hacer Pregunta
-            </a>
+            
+            <?php if ($isAlumno || $isAdmin): ?>
+                <a href="<?= Url::to(['create']) ?>" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Hacer Pregunta
+                </a>
+            <?php endif; ?>
         </div>
 
-        <div class="row mb-4">
-            <?php foreach ($stats as $label => $value): ?>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="card text-center shadow-sm h-100">
-                        <div class="card-body">
-                            <h2 class="display-6 fw-bold"><?= $value ?></h2>
-                            <p class="text-muted mb-0"><?= Html::encode($label) ?></p>
+        <?php if ($isAdmin): ?>
+            <div class="row mb-4">
+                <?php foreach ($stats as $label => $value): ?>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <h2 class="display-6 fw-bold"><?= $value ?></h2>
+                                <p class="text-muted mb-0"><?= Html::encode($label) ?></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
         <div class="card mb-4 bg-light border-0">
             <div class="card-body">
                 <form action="<?= Url::to(['index']) ?>" method="get" class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Buscar</label>
-                        <input type="text" name="q" class="form-control" placeholder="TÃ­tulo o contenido...">
+                        <input type="text" name="q" class="form-control" placeholder="Título o contenido..." value="<?= Html::encode(Yii::$app->request->get('q')) ?>">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Estado</label>
@@ -95,11 +105,30 @@ $stats = [
                                     </h4>
                                     
                                     <div class="text-muted small mt-2">
-                                        <i class="bi bi-person"></i> <?= Html::encode($model->usuario->username ?? 'AnÃ³nimo') ?> &bull;
+                                        <i class="bi bi-person"></i> <?= Html::encode($model->usuario->username ?? 'Anónimo') ?> &bull;
                                         <i class="bi bi-calendar"></i> <?= Yii::$app->formatter->asRelativeTime($model->fecha_creacion) ?> &bull;
                                         <i class="bi bi-chat-dots"></i> <?= count($model->respuestas) ?> respuestas
                                     </div>
                                 </div>
+
+                                <div class="actions" style="position: relative; z-index: 2;">
+                                    <?php if ($isAdmin || $model->usuario_id === $currentUserId): ?>
+                                        <?= Html::a('<i class="bi bi-pencil"></i>', ['update', 'id' => $model->id], [
+                                            'class' => 'btn btn-sm btn-outline-secondary',
+                                            'title' => 'Editar'
+                                        ]) ?>
+                                        
+                                        <?php if ($isAdmin): ?>
+                                            <?= Html::a('<i class="bi bi-trash"></i>', ['delete', 'id' => $model->id], [
+                                                'class' => 'btn btn-sm btn-outline-danger',
+                                                'data-confirm' => '¿Estás seguro de eliminar esta pregunta?',
+                                                'data-method' => 'post',
+                                                'title' => 'Eliminar (Solo Admin)'
+                                            ]) ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+
                             </div>
                         </div>
                     </div>
